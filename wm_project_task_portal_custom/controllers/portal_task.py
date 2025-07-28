@@ -40,9 +40,10 @@ class PortalTaskController(CustomerPortal):
         vals = {
             'name': post.get('name'),
             'project_id': project_id,
-            'description': post.get('description') or 'COUCOU',
+            'description': post.get('description') or '',
             'partner_id': request.env.user.partner_id.id,
             'task_type': post.get('task_type') or 'question',
+            'priority': post.get('priority') or '0',
         }
 
         task = request.env['project.task'].sudo().create(vals)
