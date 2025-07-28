@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_task_form_client_portal" model="ir.ui.view">
+    <field name="name">project.task.form.client.portal</field>
+    <field name="model">project.task</field>
+    <field name="inherit_id" ref="project.view_task_form2"/>
+    <field name="priority" eval="90"/>
+    <field name="arch" type="xml">
+
+      <!-- NE PAS METTRE groups sur le form -->
+
+      <!-- Ajouter le champ task_type -->
+      <xpath expr="//sheet//group[1]" position="inside">
+        <field name="task_type" required="1"/>
+      </xpath>
+
+      <!-- Retirer la domain qui utilise user -->
+      <xpath expr="//field[@name='project_id']" position="attributes">
+        <attribute name="required">1</attribute>
+      </xpath>
+
+      <!-- Cacher user_id aux portails -->
+      <xpath expr="//field[@name='user_id']" position="attributes">
+        <attribute name="groups">base.group_no_one</attribute>
+      </xpath>
+
+      <!-- Pièces jointes -->
+      <xpath expr="//sheet" position="inside">
+        <group string="Pièces jointes">
+          <field name="attachment_ids" widget="many2many_binary"/>
+        </group>
+      </xpath>
+    </field>
+  </record>
+</odoo>

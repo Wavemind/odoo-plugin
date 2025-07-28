@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <template id="portal_tasks_list_kanban" name="Portal Tasks List (Kanban)">
+    <t t-call="portal.portal_layout">
+      <t t-set="title">Mes tâches</t>
+
+      <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h2>Mes tâches</h2>
+          <div>
+            <a t-attf-href="/my/tasks?view=list" class="btn btn-outline-secondary">
+              Voir en liste
+            </a>
+          </div>
+        </div>
+        <div class="o_kanban_view o_kanban_mobile px-5 py-3">
+          <div class="row flex-nowrap overflow-auto" style="gap: 2rem;">
+            <t t-foreach="tasks_by_stage.items()" t-as="item">
+              <t t-set="stage" t-value="item[0]"/>
+              <t t-set="tasks_in_stage" t-value="item[1]"/>
+              <div class="o_kanban_column card p-0" style="max-width: 300px;">
+                <div class="card-header text-primary p-0 pb-3">
+                  <div class="d-flex justify-content-between">
+                    <strong class="fs-5" t-esc="stage.name"/>
+                    <span class="text-primary rounded-circle bg-white fs-6 fw-bolder" style="width: 28px; text-align:center; height: 28px; padding-top:3px" t-esc="len(tasks_in_stage)"/>
+                  </div>
+                </div>
+                <div class="o_kanban_column_cards card-body p-0 mt-2">
+                  <t t-foreach="tasks_in_stage" t-as="task">
+                    <div t-attf-class="oe_kanban_card card mb-2 priority-border-#{task.priority}">
+                      <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                          <p class="portal-task-type mb-2" t-esc="task.task_type"/>
+                          <t t-set="assignees" t-value="task.sudo().user_ids"/>
+                          <div t-if="assignees" class="row flex-nowrap ">
+                            <div class="d-flex flex-row-reverse">
+                              <img class="rounded-circle o_portal_contact_img px-0" t-attf-src="#{image_data_uri(assignees[:1].avatar_128)}" alt="User" style="width: 20px; height: 20px;"/>
+                            </div>
+                          </div>
+                        </div>
+                        <h6 class="card-title fw-normal fs-6 mb-1" t-esc="task.name"/>
+                        <t t-if="task.priority">
+                          <span t-if="task.priority == '3'" class="badge mt-3 bg-danger">Très haute</span>
+                          <span t-if="task.priority == '2'" class="badge mt-3 bg-warning text-dark">Haute</span>
+                          <span t-if="task.priority == '1'" class="badge mt-3 bg-secondary">Normale</span>
+                          <span t-if="task.priority == '0'" class="badge mt-3 bg-light text-dark">Faible</span>
+                        </t>
+                        <t t-if="task.tag_ids">
+                          <div class="mt-2">
+                            <t t-foreach="task.tag_ids" t-as="tag">
+                              <span class="badge bg-secondary me-1" t-esc="tag.name"/>
+                            </t>
+                          </div>
+                        </t>
+                      </div>
+                    </div>
+                  </t>
+                </div>
+              </div>
+            </t>
+          </div>
+        </div>
+      </div>
+      <style>
+        .card.o_kanban_column  {
+          border: 0;
+          background: transparent;
+        }
+        .oe_kanban_card  {
+          border-radius: 0;
+          border:0;
+        }
+        .o_kanban_view {
+          background-color: #F0F5F9;
+          border-radius: 0.5rem;
+        }
+        .o_kanban_column_cards{
+          background: transparent !important;
+        }
+        .card-header {
+          background: transparent;
+          border:0;
+        }
+        .portal-task-type {
+          text-transform: capitalize;
+          color: #878787;
+        }
+        .o_portal_wrap,.container {
+          max-width: 100% !important;
+        }
+        .card-body{
+          color: #0c0c0c;
+        }
+        .priority-border-3 { border-left: 4px solid #dc3545; }
+        .priority-border-2 { border-left: 4px solid #fd7e14; }
+        .priority-border-1 { border-left: 4px solid #6c757d; }
+        .priority-border-0 { border-left: 4px solid #dee2e6; }
+      </style>
+    </t>
+  </template>
+</odoo>

@@ -1,0 +1,31 @@
+<odoo>
+  <!-- Groupe client -->
+  <record id="rule_project_portal_projects_customer_only" model="ir.rule">
+    <field name="name">Portal: see only projects of their own company</field>
+    <field name="model_id" ref="project.model_project_project"/>
+    <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    <!-- partner_id est le client du projet. On utilise child_of pour inclure sous-contacts -->
+    <field name="domain_force">
+        [('partner_id','child_of', user.partner_id.commercial_partner_id.id)]
+    </field>
+    <field name="perm_read" eval="1"/>
+    <field name="perm_write" eval="0"/>
+    <field name="perm_create" eval="0"/>
+    <field name="perm_unlink" eval="0"/>
+  </record>
+
+  <!-- Record rule: le client ne voit que ses tâches -->
+  <record id="rule_project_portal_tasks_customer_only" model="ir.rule">
+    <field name="name">Portal: see/create tasks only on their projects</field>
+    <field name="model_id" ref="project.model_project_task"/>
+    <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
+    <field name="domain_force">
+        [('project_id.partner_id','child_of', user.partner_id.commercial_partner_id.id)]
+    </field>
+    <field name="perm_read" eval="1"/>
+    <field name="perm_write" eval="1"/>
+    <field name="perm_create" eval="1"/>
+    <field name="perm_unlink" eval="0"/>
+  </record>
+
+</odoo>
