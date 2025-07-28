@@ -27,7 +27,8 @@
                 </div>
                 <div class="o_kanban_column_cards card-body p-0 mt-2">
                   <t t-foreach="tasks_in_stage" t-as="task">
-                    <div t-attf-class="oe_kanban_card card mb-2 priority-border-#{task.priority}">
+                    <a t-attf-href="/my/tasks/#{task.id}" class="oe_kanban_card card mb-2 priority-border-#{task.priority}" style="text-decoration: none;">
+
                       <div class="card-body">
                         <div class="d-flex justify-content-between">
                           <p class="portal-task-type mb-2" t-esc="task.task_type"/>
@@ -53,7 +54,7 @@
                           </div>
                         </t>
                       </div>
-                    </div>
+                    </a>
                   </t>
                 </div>
               </div>

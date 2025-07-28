@@ -1,0 +1,4 @@
+# Odoo Dev Tools
+- Use `pylint-odoo`, `black`, and `pre-commit` for linting.
+- For deployment, prefer Odoo.sh or Docker.
+- Manage dependencies via `requirements.txt`.

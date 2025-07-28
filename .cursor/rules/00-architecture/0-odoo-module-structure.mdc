@@ -1,0 +1,5 @@
+# Odoo Module Structure
+- Use `__manifest__.py` to define each module.
+- Keep a consistent directory structure: `models`, `views`, `security`, `data`, `wizard`, `report`.
+- Avoid circular dependencies between modules.
+- Group modules by domain (e.g. hr, sale, stock).

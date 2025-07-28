@@ -1,0 +1,4 @@
+# Odoo Domain Rules
+- In accounting: avoid changing journal entries directly.
+- In HR: follow validation chains (employee > manager > hr).
+- Always validate business constraints with SQL constraints or `@api.constrains`.

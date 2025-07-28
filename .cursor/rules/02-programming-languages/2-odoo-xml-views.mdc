@@ -1,0 +1,4 @@
+# Odoo XML Views
+- Use `xpath` to inherit views, avoid duplication.
+- Always define `name`, `model`, and proper access control in views.
+- Respect Odoo XML structure (no unclosed tags, 2-space indent).

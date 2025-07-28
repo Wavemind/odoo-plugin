@@ -66,8 +66,6 @@ class PortalTaskController(CustomerPortal):
                         search=None, search_in='content', groupby='project',
                         filterby=None, view=None, **kwargs):
 
-        _logger.debug(">>> portal_my_tasks called with view=%s", view)
-
         partner = request.env.user.partner_id.commercial_partner_id
 
         allowed_projects = request.env['project.project'].sudo().search([
