@@ -1,4 +1,0 @@
-# Odoo ORM Usage
-- Prefer `search`, `filtered`, `mapped` to raw SQL.
-- Avoid N+1 queries, use `read_group` or `prefetch_fields`.
-- Use `@api.depends` with correct field names.

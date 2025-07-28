@@ -1,4 +1,0 @@
-# Odoo Testing
-- Write tests for models, workflows, and security rules.
-- Use `setUp`/`tearDown` to isolate test data.
-- Include tests for ACLs, record rules, and onchange logic.

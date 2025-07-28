@@ -18,6 +18,7 @@
         'views/portal_tasks_list_kanban.xml',
         'views/portal_templates.xml',       # bouton/carte sur /my/home
         'views/project_task_views.xml',      # si tu as une vue backend
+        'views/portal_my_tasks_kanban_switch.xml',  # switch entre vue liste et kanban
         'security/ir.model.access.csv',
         'security/project_task_security.xml',
     ],
@@ -27,6 +28,7 @@
             'web_editor.assets_wysiwyg',
             # Optional: Also include editor styling and extra behavior
             'web_editor.assets_editor',
+            'wm_project_task_portal_custom/static/src/css/view_switch.css',
             'wm_project_task_portal_custom/static/src/js/task_wysiwyg.js',
         ],
     },

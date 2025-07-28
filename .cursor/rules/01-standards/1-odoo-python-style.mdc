@@ -1,5 +1,0 @@
-# Odoo Python Style
-- Follow PEP8 + Odoo coding guidelines.
-- Use `snake_case` for variables/functions, `CamelCase` for models.
-- Use `_('text')` for all translatable strings.
-- Use `api.model`, `api.depends`, etc. decorators where appropriate.

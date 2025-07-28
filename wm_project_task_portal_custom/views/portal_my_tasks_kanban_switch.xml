@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Template pour la vue Liste avec boutons de switch -->
+    <template id="portal_my_tasks_kanban_switch" name="My Tasks List with Switch">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Tasks</t>
+            </t>
+            
+            <div class="container-fluid portal-my-tasks-list">
+                <div class="d-flex justify-content-end mb-3">
+                    <div class="btn-group" role="group" aria-label="Vue des tâches">
+                        <a t-attf-href="/my/tasks?view=list" 
+                           class="btn btn-outline-primary" 
+                           id="list-view-btn">
+                            <i class="fa fa-list me-1"></i>
+                            Liste
+                        </a>
+                        <a t-attf-href="/my/tasks?view=kanban" 
+                           class="btn btn-outline-primary" 
+                           id="kanban-view-btn">
+                            <i class="fa fa-th-large me-1"></i>
+                            Kanban
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <t t-if="not grouped_tasks">
+                <div class="alert alert-warning" role="alert">
+                    There are no tasks.
+                </div>
+            </t>
+            <t t-call="project.portal_tasks_list"/>
+        </t>
+    </template>
+
+    <!-- Template pour la vue Kanban des tâches -->
+    <template id="portal_my_tasks_kanban" name="My Tasks Kanban">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Tasks</t>
+            </t>
+            
+            <div class="container-fluid portal-my-tasks-kanban">
+                <div class="d-flex justify-content-end mb-3">
+                    <div class="btn-group" role="group" aria-label="Vue des tâches">
+                        <a t-attf-href="/my/tasks?view=list" 
+                           class="btn btn-outline-primary" 
+                           id="list-view-btn">
+                            <i class="fa fa-list me-1"></i>
+                            Liste
+                        </a>
+                        <a t-attf-href="/my/tasks?view=kanban" 
+                           class="btn btn-outline-primary" 
+                           id="kanban-view-btn">
+                            <i class="fa fa-th-large me-1"></i>
+                            Kanban
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <t t-if="not grouped_tasks">
+                <div class="alert alert-warning" role="alert">
+                    There are no tasks.
+                </div>
+            </t>
+            
+            <!-- Contenu Kanban intégré directement -->
+            <div class="container">
+                <div class="o_kanban_view o_kanban_mobile px-5 py-3">
+                    <div class="row flex-nowrap overflow-auto" style="gap: 2rem;">
+                        <t t-foreach="tasks_by_stage.items()" t-as="item">
+                            <t t-set="stage" t-value="item[0]"/>
+                            <t t-set="tasks_in_stage" t-value="item[1]"/>
+                            <div class="o_kanban_column card p-0" style="max-width: 300px;">
+                                <div class="card-header text-primary p-0 pb-3">
+                                    <div class="d-flex justify-content-between">
+                                        <strong class="fs-5" t-esc="stage.name"/>
+                                        <span class="text-primary rounded-circle bg-white fs-6 fw-bolder" style="width: 28px; text-align:center; height: 28px; padding-top:3px" t-esc="len(tasks_in_stage)"/>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_column_cards card-body p-0 mt-2">
+                                    <t t-foreach="tasks_in_stage" t-as="task">
+                                        <a t-attf-href="/my/tasks/#{task.id}" t-attf-class="oe_kanban_card card mb-2 priority-border-#{task.priority}" style="text-decoration: none;">
+                                            <div class="card-body">
+                                                <div class="d-flex justify-content-between">
+                                                    <p class="portal-task-type mb-2" t-esc="task.task_type"/>
+                                                    <t t-set="assignees" t-value="task.sudo().user_ids"/>
+                                                    <div t-if="assignees" class="row flex-nowrap ">
+                                                        <div class="d-flex flex-row-reverse">
+                                                            <img class="rounded-circle o_portal_contact_img px-0" t-attf-src="#{image_data_uri(assignees[:1].avatar_128)}" alt="User" style="width: 20px; height: 20px;"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <h6 class="card-title fw-normal fs-6 mb-1" t-esc="task.name"/>
+                                                <t t-if="task.priority">
+                                                    <span t-if="task.priority == '3'" class="badge mt-3 bg-danger">Très haute</span>
+                                                    <span t-if="task.priority == '2'" class="badge mt-3 bg-warning text-dark">Haute</span>
+                                                    <span t-if="task.priority == '1'" class="badge mt-3 bg-secondary">Normale</span>
+                                                    <span t-if="task.priority == '0'" class="badge mt-3 bg-light text-dark">Faible</span>
+                                                </t>
+                                                <t t-if="task.tag_ids">
+                                                    <div class="mt-2">
+                                                        <t t-foreach="task.tag_ids" t-as="tag">
+                                                            <span class="badge bg-secondary me-1" t-esc="tag.name"/>
+                                                        </t>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                        </a>
+                                    </t>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo> 

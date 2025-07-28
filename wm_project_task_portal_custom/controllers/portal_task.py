@@ -88,13 +88,15 @@ class PortalTaskController(CustomerPortal):
                 if stage_map.get(stage):
                     tasks_by_stage[stage] = stage_map[stage]
 
-            return request.render('wm_project_task_portal_custom.portal_tasks_list_kanban', {
+            return request.render('wm_project_task_portal_custom.portal_my_tasks_kanban', {
                 'tasks_by_stage': tasks_by_stage,
+                'grouped_tasks': tasks_by_stage,  # Pour la compatibilité avec le template
                 'page_name': 'project_task',
+                'view': 'kanban',
             })
 
         else:
-            # Vue Liste standard Odoo
+            # Vue Liste (par défaut ou explicitement demandée)
             searchbar_filters = self._get_my_tasks_searchbar_filters()
             if not filterby:
                 filterby = 'all'
@@ -114,4 +116,4 @@ class PortalTaskController(CustomerPortal):
                 'view': 'list',
             })
 
-            return request.render("project.portal_my_tasks", values)
+            return request.render("wm_project_task_portal_custom.portal_my_tasks_kanban_switch", values)

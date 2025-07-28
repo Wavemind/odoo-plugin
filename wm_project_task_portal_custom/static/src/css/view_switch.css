@@ -1,0 +1,76 @@
+/* Styles pour les boutons de switch de vue */
+.btn-group .btn {
+    background-color: transparent;
+    border-color: var(--bs-primary);;
+    color: var(--bs-primary);;
+    transition: all 0.3s ease;
+}
+
+.btn-group .btn:hover {
+    background-color: var(--bs-primary);;
+    border-color: var(--bs-primary);;
+    color: white;
+}
+
+.btn-group .btn.active {
+    background-color: var(--bs-primary);;
+    border-color: var(--bs-primary);;
+    color: white;
+}
+
+/* Styles pour les boutons dans la vue liste */
+.portal-my-tasks-list .btn-group .btn[href*="view=list"] {
+    background-color: var(--bs-primary);;
+    border-color: var(--bs-primary);;
+    color: white;
+}
+
+/* Styles pour les boutons dans la vue kanban */
+.portal-my-tasks-kanban .btn-group .btn[href*="view=kanban"] {
+    background-color: var(--bs-primary);;
+    border-color: var(--bs-primary);;
+    color: white;
+}
+
+/* Styles pour la vue Kanban */
+.card.o_kanban_column {
+    border: 0;
+    background: transparent;
+}
+
+.oe_kanban_card {
+    border-radius: 0;
+    border: 0;
+}
+
+.o_kanban_view {
+    background-color: #F0F5F9;
+    border-radius: 0.5rem;
+}
+
+.o_kanban_column_cards {
+    background: transparent !important;
+}
+
+.card-header {
+    background: transparent;
+    border: 0;
+}
+
+.portal-task-type {
+    text-transform: capitalize;
+    color: #878787;
+}
+
+.o_portal_wrap, .container {
+    max-width: 100% !important;
+}
+
+.card-body {
+    color: #0c0c0c;
+}
+
+.priority-border-3 { border-left: 4px solid #dc3545; }
+.priority-border-2 { border-left: 4px solid #fd7e14; }
+.priority-border-1 { border-left: 4px solid #6c757d; }
+.priority-border-0 { border-left: 4px solid #dee2e6; } 

@@ -1,4 +1,0 @@
-# Module Delivery Workflow
-- Validate using `odoo-bin --test-enable`.
-- Ensure migration scripts exist for upgrades.
-- Push modules to staging before production.
