@@ -14,7 +14,7 @@
                     <div></div>
                     <div class="d-flex gap-2">
                         <a href="/my/tasks/new" 
-                           class="btn btn-success" 
+                           class="btn btn-secondary" 
                            title="Créer un nouveau ticket">
                             <i class="fa fa-plus me-1"></i>
                             Nouveau ticket
@@ -92,7 +92,7 @@
             <!-- Contenu Kanban intégré directement -->
             <div class="container kanban-container">
                 <div class="o_kanban_view o_kanban_mobile px-5 py-3">
-                    <div class="row flex-nowrap overflow-auto" style="gap: 2rem;">
+                    <div class="kanban-scroll-container row flex-nowrap" style="gap: 2rem;">
                         <t t-foreach="tasks_by_stage.items()" t-as="item">
                             <t t-set="stage" t-value="item[0]"/>
                             <t t-set="tasks_in_stage" t-value="item[1]"/>

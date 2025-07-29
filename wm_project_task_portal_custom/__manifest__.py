@@ -32,6 +32,7 @@
             'web_editor.assets_editor',
             'wm_project_task_portal_custom/static/src/css/view_switch.css',
             'wm_project_task_portal_custom/static/src/js/task_wysiwyg.js',
+            'wm_project_task_portal_custom/static/src/js/kanban_scroll.js',
         ],
     },
     'installable': True,

@@ -36,6 +36,8 @@
 .card.o_kanban_column {
     border: 0;
     background: transparent;
+    min-width: 280px;
+    flex-shrink: 0;
 }
 
 .oe_kanban_card {
@@ -63,6 +65,7 @@
 }
 
 .portal-my-tasks-kanban .o_portal_wrap, 
+.container:has(.kanban-container),
 .kanban-container {
     max-width: 100% !important;
 }
@@ -74,4 +77,50 @@
 .priority-border-3 { border-left: 4px solid #dc3545; }
 .priority-border-2 { border-left: 4px solid #fd7e14; }
 .priority-border-1 { border-left: 4px solid #6c757d; }
-.priority-border-0 { border-left: 4px solid #dee2e6; } 
+.priority-border-0 { border-left: 4px solid #dee2e6; }
+
+/* Styles pour le scroll draggable du Kanban */
+.kanban-scroll-container {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    position: relative;
+    scrollbar-width: thin;
+    scrollbar-color: #c1c1c1 #f1f1f1;
+}
+
+.kanban-scroll-container:active {
+    cursor: grabbing;
+}
+
+.kanban-scroll-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.kanban-scroll-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.kanban-scroll-container::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.kanban-scroll-container::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Amélioration de l'expérience de scroll */
+.kanban-scroll-container a,
+.kanban-scroll-container button,
+.kanban-scroll-container input,
+.kanban-scroll-container .btn {
+    pointer-events: auto;
+    cursor: pointer;
+} 
