@@ -72,7 +72,7 @@
             </t>
             
             <!-- Contenu Kanban intégré directement -->
-            <div class="container">
+            <div class="container kanban-container">
                 <div class="o_kanban_view o_kanban_mobile px-5 py-3">
                     <div class="row flex-nowrap overflow-auto" style="gap: 2rem;">
                         <t t-foreach="tasks_by_stage.items()" t-as="item">

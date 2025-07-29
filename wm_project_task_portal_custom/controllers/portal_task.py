@@ -75,6 +75,10 @@ class PortalTaskController(CustomerPortal):
         ])
         domain = [('project_id', 'in', allowed_projects.ids)]
 
+        # Définir la vue Kanban comme vue par défaut si aucune vue n'est spécifiée
+        if not view:
+            view = 'kanban'
+
         if view == 'kanban':
             tasks = request.env['project.task'].sudo().search(domain)
 

@@ -62,7 +62,9 @@
     color: #878787;
 }
 
-.o_portal_wrap, .container {
+.portal-my-tasks-kanban .o_portal_wrap, 
+.portal-my-tasks-kanban .container,
+.portal-my-tasks-kanban .kanban-container {
     max-width: 100% !important;
 }
 
