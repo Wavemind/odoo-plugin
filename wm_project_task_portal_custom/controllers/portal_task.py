@@ -75,33 +75,9 @@ class PortalTaskController(CustomerPortal):
         ])
         domain = [('project_id', 'in', allowed_projects.ids)]
 
-        # Définir la vue Kanban comme vue par défaut si aucune vue n'est spécifiée
-        if not view:
-            view = 'kanban'
-
-        if view == 'kanban':
-            tasks = request.env['project.task'].sudo().search(domain)
-
-            stages = request.env['project.task.type'].sudo().search([], order='sequence ASC')
-            stage_map = defaultdict(list)
-            for task in tasks:
-                stage_map[task.stage_id].append(task)
-
-            # Utilise un OrderedDict pour garder l’ordre des stages
-            tasks_by_stage = OrderedDict()
-            for stage in stages:
-                if stage_map.get(stage):
-                    tasks_by_stage[stage] = stage_map[stage]
-
-            return request.render('wm_project_task_portal_custom.portal_my_tasks_kanban', {
-                'tasks_by_stage': tasks_by_stage,
-                'grouped_tasks': tasks_by_stage,  # Pour la compatibilité avec le template
-                'page_name': 'project_task',
-                'view': 'kanban',
-            })
-
-        else:
-            # Vue Liste (par défaut ou explicitement demandée)
+        
+        if view == 'list':
+          # Vue Liste (par défaut ou explicitement demandée)
             searchbar_filters = self._get_my_tasks_searchbar_filters()
             if not filterby:
                 filterby = 'all'
@@ -122,3 +98,26 @@ class PortalTaskController(CustomerPortal):
             })
 
             return request.render("wm_project_task_portal_custom.portal_my_tasks_kanban_switch", values)
+
+        else:
+            tasks = request.env['project.task'].sudo().search(domain)
+
+            stages = request.env['project.task.type'].sudo().search([], order='sequence ASC')
+            stage_map = defaultdict(list)
+            for task in tasks:
+                stage_map[task.stage_id].append(task)
+
+            # Utilise un OrderedDict pour garder l’ordre des stages
+            tasks_by_stage = OrderedDict()
+            for stage in stages:
+                if stage_map.get(stage):
+                    tasks_by_stage[stage] = stage_map[stage]
+
+            return request.render('wm_project_task_portal_custom.portal_my_tasks_kanban', {
+                'tasks_by_stage': tasks_by_stage,
+                'grouped_tasks': tasks_by_stage,  # Pour la compatibilité avec le template
+                'page_name': 'project_task',
+                'view': 'kanban',
+            })
+
+            

@@ -10,20 +10,29 @@
             </t>
             
             <div class="container-fluid portal-my-tasks-list">
-                <div class="d-flex justify-content-end mb-3">
-                    <div class="btn-group" role="group" aria-label="Vue des tâches">
-                        <a t-attf-href="/my/tasks?view=list" 
-                           class="btn btn-outline-primary" 
-                           id="list-view-btn">
-                            <i class="fa fa-list me-1"></i>
-                            Liste
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div></div>
+                    <div class="d-flex gap-2">
+                        <a href="/my/tasks/new" 
+                           class="btn btn-success" 
+                           title="Créer un nouveau ticket">
+                            <i class="fa fa-plus me-1"></i>
+                            Nouveau ticket
                         </a>
-                        <a t-attf-href="/my/tasks?view=kanban" 
-                           class="btn btn-outline-primary" 
-                           id="kanban-view-btn">
-                            <i class="fa fa-th-large me-1"></i>
-                            Kanban
-                        </a>
+                        <div class="btn-group" role="group" aria-label="Vue des tâches">
+                            <a t-attf-href="/my/tasks?view=list" 
+                               class="btn btn-outline-primary" 
+                               id="list-view-btn">
+                                <i class="fa fa-list me-1"></i>
+                                Liste
+                            </a>
+                            <a t-attf-href="/my/tasks?view=kanban" 
+                               class="btn btn-outline-primary" 
+                               id="kanban-view-btn">
+                                <i class="fa fa-th-large me-1"></i>
+                                Kanban
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -47,20 +56,29 @@
             </t>
             
             <div class="container-fluid portal-my-tasks-kanban">
-                <div class="d-flex justify-content-end mb-3">
-                    <div class="btn-group" role="group" aria-label="Vue des tâches">
-                        <a t-attf-href="/my/tasks?view=list" 
-                           class="btn btn-outline-primary" 
-                           id="list-view-btn">
-                            <i class="fa fa-list me-1"></i>
-                            Liste
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div></div>
+                    <div class="d-flex gap-2">
+                        <a href="/my/tasks/new" 
+                           class="btn btn-success" 
+                           title="Créer un nouveau ticket">
+                            <i class="fa fa-plus me-1"></i>
+                            Nouveau ticket
                         </a>
-                        <a t-attf-href="/my/tasks?view=kanban" 
-                           class="btn btn-outline-primary" 
-                           id="kanban-view-btn">
-                            <i class="fa fa-th-large me-1"></i>
-                            Kanban
-                        </a>
+                        <div class="btn-group" role="group" aria-label="Vue des tâches">
+                            <a t-attf-href="/my/tasks?view=list" 
+                               class="btn btn-outline-primary" 
+                               id="list-view-btn">
+                                <i class="fa fa-list me-1"></i>
+                                Liste
+                            </a>
+                            <a t-attf-href="/my/tasks?view=kanban" 
+                               class="btn btn-outline-primary" 
+                               id="kanban-view-btn">
+                                <i class="fa fa-th-large me-1"></i>
+                                Kanban
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
