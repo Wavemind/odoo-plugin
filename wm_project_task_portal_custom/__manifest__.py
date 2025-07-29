@@ -12,6 +12,7 @@
         'web',
         'web_editor',
         'base_setup',
+        'l10n_din5008',
     ],
     'data': [
         'views/portal_task_templates.xml',   # le formulaire QWeb
@@ -19,6 +20,7 @@
         'views/portal_templates.xml',       # bouton/carte sur /my/home
         'views/project_task_views.xml',      # si tu as une vue backend
         'views/portal_my_tasks_kanban_switch.xml',  # switch entre vue liste et kanban
+        'views/external_layout_override.xml',  # override du layout DIN5008
         'security/ir.model.access.csv',
         'security/project_task_security.xml',
     ],

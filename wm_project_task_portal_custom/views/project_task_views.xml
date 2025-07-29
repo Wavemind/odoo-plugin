@@ -46,7 +46,7 @@
             <!-- Ajouter le champ task_type dans le kanban -->
             <xpath expr="//field[@name='name']" position="after">
                 <field name="task_type"/>
-            </xpath>
+            </xpath>    
         </field>
     </record>
 </odoo>
