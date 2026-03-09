@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <!--
-            Enregistre "Wavemind" comme option de layout dans
-            Paramètres > Sociétés > Mise en page du document.
-            noupdate="1" : ne sera jamais écrasé par une mise à jour Odoo.
-        -->
+        <!-- Registers "Wavemind" as a selectable report layout. noupdate="1": never overwritten by Odoo updates. -->
         <record id="report_layout_wavemind" model="report.layout">
             <field name="name">Wavemind</field>
             <field name="sequence">1</field>

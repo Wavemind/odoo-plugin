@@ -2,12 +2,8 @@
 <odoo>
     <data>
 
-        <!--
-            Layout de facturation Wavemind — indépendant des mises à jour Odoo.
-            Basé sur DIN 5008, logo statique hardcodé, entièrement contrôlé ici.
-            Pour changer le logo : remplacer static/src/img/company_logo.png
-            Pour changer le layout : modifier ce fichier uniquement.
-        -->
+        <!-- Wavemind invoice layout — static logo, hardcoded footer.
+             To update the logo: replace static/src/img/company_logo.png -->
         <template id="external_layout_wavemind" name="Wavemind">
             <div>
                 <t t-set="is_din_paperformat"
@@ -16,12 +12,10 @@
                        env.ref('l10n_din5008.paperformat_euro_din',   raise_if_not_found=False)
                    ]"/>
 
-                <!-- ═══════════════════════════════════════
-                     EN-TÊTE : logo statique
-                ═══════════════════════════════════════ -->
+                <!-- Header -->
                 <div t-attf-class="header din_page o_company_#{company.id}_layout #{'din_page_pdf' if report_type == 'pdf' and is_din_paperformat else ''}">
-                    <div style="height: 33mm; width: 100%; display: table;">
-                        <div style="display: table-cell; vertical-align: middle; text-align: left; padding-top: 5mm;">
+                    <div style="height: 45mm; width: 100%; display: table;">
+                        <div style="display: table-cell; vertical-align: middle; text-align: left; padding-top: 5mm; padding-left: 5mm;">
                             <img src="/wm_custom_invoice_logo/static/src/img/company_logo.png"
                                  style="max-height: 18mm; max-width: 80mm;"
                                  alt="Logo"/>
@@ -29,9 +23,7 @@
                     </div>
                 </div>
 
-                <!-- ═══════════════════════════════════════
-                     CORPS : adresses, titre, contenu
-                ═══════════════════════════════════════ -->
+                <!-- Body -->
                 <t t-set="layout_background_url"
                    t-value="'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8')
                              if company.layout_background_image and company.layout_background == 'Custom'
@@ -46,10 +38,9 @@
                      t-att-data-oe-model="o and o._name"
                      t-att-data-oe-id="o and o.id">
 
-                    <!-- Bloc adresses + infos société -->
                     <table class="din_company_info table-borderless" t-if="not skip_headers">
                         <tr>
-                            <!-- Colonne gauche : adresse expéditeur + destinataire -->
+                            <!-- Sender + recipient address -->
                             <td>
                                 <div class="address">
                                     <t t-if="company.name"><span t-field="company.name"/></t>
@@ -63,7 +54,6 @@
                                     <t t-if="company.country_id"><span>|</span> <span t-field="company.country_id.name"/></t>
                                     <hr class="company_invoice_line"/>
 
-                                    <!-- Adresse destinataire -->
                                     <t t-if="not address and o and 'l10n_din5008_addresses' in o"
                                        t-set="address">
                                         <address class="mb-0"
@@ -86,7 +76,7 @@
                                 </div>
                             </td>
 
-                            <!-- Colonne droite : données du document (date, numéro…) -->
+                            <!-- Document metadata (date, number…) -->
                             <td>
                                 <div class="information_block">
                                     <t t-if="'l10n_din5008_template_data' in company"
@@ -107,7 +97,6 @@
                             </td>
                         </tr>
 
-                        <!-- Adresses supplémentaires (livraison…) -->
                         <div>
                             <tr t-if="o and 'l10n_din5008_addresses' in o">
                                 <t t-foreach="o.l10n_din5008_addresses" t-as="doc_address">
@@ -131,7 +120,6 @@
                         </div>
                     </table>
 
-                    <!-- Titre du document (ex : FACTURE, DEVIS…) -->
                     <h2 t-if="not skip_headers">
                         <span t-if="not o and not docs">
                             <t t-out="company.l10n_din5008_document_title"/>
@@ -145,36 +133,32 @@
                         </span>
                     </h2>
 
-                    <!-- Contenu injecté par le rapport (lignes de facture, etc.) -->
                     <t t-out="0"/>
                 </div>
 
-                <!-- ═══════════════════════════════════════
-                     PIED DE PAGE — hardcodé Wavemind
-                ═══════════════════════════════════════ -->
+                <!-- Footer -->
                 <div t-attf-class="din_page footer o_company_#{company.id}_layout #{'din_page_pdf' if report_type == 'pdf' and is_din_paperformat else ''}">
-                    <table style="width: 100%; border-top: 1px solid #0C0C0C; border-collapse: collapse; font-size: 8pt; padding-top: 4px; padding-bottom: 4px;">
-                        <tr>
-                            <!-- Colonne 1 : Adresse -->
-                            <td style="width: 33%; vertical-align: top; padding: 4px 0; line-height: 1.1;">
+                    <div style="display: table; width: 100%; border-top: 1px solid #0C0C0C; font-size: 8pt; padding-top: 4px; padding-bottom: 4px;">
+                        <div style="display: table-row;">
+                            <div style="display: table-cell; width: 33%; vertical-align: top; padding: 4px 0; line-height: 1.1;">
                                 Wavemind Sàrl<br/>
                                 Rue de Bourg 31<br/>
                                 1003 Lausanne<br/>
                                 Switzerland
-                            </td>
-                            <!-- Colonne 2 : Téléphone + Email -->
-                            <td style="width: 33%; vertical-align: top; padding: 4px 0; line-height: 1.1;">
+                            </div>
+                            <div style="display: table-cell; width: 33%; vertical-align: top; padding: 4px 0; line-height: 1.1;">
                                 +41 24 520 00 77<br/>
                                 info@wavemind.ch
-                            </td>
-                            <!-- Colonne 3 : TVA + IBAN + BIC -->
-                            <td style="width: 34%; vertical-align: top; padding: 4px 0; line-height: 1.1;">
-                                Tax ID: CHE-110.059.099 TVA<br/>
-                                IBAN: CH50 0900 0000 1449 4692 8<br/>
-                                BIC: UBSWCHZH80A
-                            </td>
-                        </tr>
-                    </table>
+                            </div>
+                            <div style="display: table-cell; width: 34%; vertical-align: top; padding: 4px 0; line-height: 1.1;">
+                                <t t-if="company.vat">Tax ID: <t t-out="company.vat"/><br/></t>
+                                <t t-if="o and o.partner_bank_id">
+                                    IBAN: <t t-out="o.partner_bank_id.acc_number"/><br/>
+                                    <t t-if="o.partner_bank_id.bank_id.bic">BIC: <t t-out="o.partner_bank_id.bank_id.bic"/></t>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
             </div>

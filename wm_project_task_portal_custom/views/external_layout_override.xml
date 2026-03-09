@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <!-- Override spécifique de la section header avec logo -->
+        <!-- Replaces the DIN 5008 header table with the Wavemind logo -->
         <template id="external_layout_din5008_override" inherit_id="l10n_din5008.external_layout_din5008" priority="999">
             <xpath expr="//table[hasclass('company_header', 'table-borderless')]" position="replace">
                 <div style="height: 35mm; width: 100%; display: table;">
