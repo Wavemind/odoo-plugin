@@ -8,4 +8,19 @@
             <field name="view_id" ref="wm_custom_invoice_logo.external_layout_wavemind"/>
         </record>
     </data>
+
+    <data>
+        <!-- Override DIN 5008 paper format margins to visually balance left/right.
+             left=13 + 5mm address padding = 18mm visual left.
+             right=17mm visual right. Nearly equal.
+             No noupdate: re-applied on every module update to survive l10n_din5008 resets. -->
+        <record id="l10n_din5008.paperformat_euro_din_a" model="report.paperformat">
+            <field name="margin_left">13</field>
+            <field name="margin_right">17</field>
+        </record>
+        <record id="l10n_din5008.paperformat_euro_din" model="report.paperformat">
+            <field name="margin_left">13</field>
+            <field name="margin_right">17</field>
+        </record>
+    </data>
 </odoo>
