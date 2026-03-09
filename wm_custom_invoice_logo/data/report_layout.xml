@@ -9,7 +9,7 @@
         <record id="report_layout_wavemind" model="report.layout">
             <field name="name">Wavemind</field>
             <field name="sequence">1</field>
-            <field name="view_id" ref="custom_invoice_logo.external_layout_wavemind"/>
+            <field name="view_id" ref="wm_custom_invoice_logo.external_layout_wavemind"/>
         </record>
     </data>
 </odoo>

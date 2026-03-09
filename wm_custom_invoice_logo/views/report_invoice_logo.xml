@@ -22,7 +22,7 @@
                 <div t-attf-class="header din_page o_company_#{company.id}_layout #{'din_page_pdf' if report_type == 'pdf' and is_din_paperformat else ''}">
                     <div style="height: 33mm; width: 100%; display: table;">
                         <div style="display: table-cell; vertical-align: middle; text-align: left; padding-top: 5mm;">
-                            <img src="/custom_invoice_logo/static/src/img/company_logo.png"
+                            <img src="/wm_custom_invoice_logo/static/src/img/company_logo.png"
                                  style="max-height: 18mm; max-width: 80mm;"
                                  alt="Logo"/>
                         </div>

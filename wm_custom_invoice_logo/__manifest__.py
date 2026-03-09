@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': 'Custom Invoice Logo',
+    'name': 'WM Custom Invoice Logo',
     'version': '17.0.1.0.0',
     'summary': 'Layout de facturation Wavemind — logo statique, robuste aux mises à jour',
     'author': 'Wavemind',
