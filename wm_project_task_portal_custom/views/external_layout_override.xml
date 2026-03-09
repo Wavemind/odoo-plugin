@@ -3,11 +3,13 @@
     <data>
         <!-- Override spécifique de la section header avec logo -->
         <template id="external_layout_din5008_override" inherit_id="l10n_din5008.external_layout_din5008" priority="999">
-            <xpath expr="//table[@class='company_header table-borderless']" position="replace">
-                <div style="height: 35mm; text-align: center; display: flex; align-items: center; justify-content: center;">
-                    <img src="/wm_project_task_portal_custom/static/src/images/wavemind_logo.png" 
-                         style="max-height: 30mm; max-width: 100mm; display: inline-block;" 
-                         alt="Logo Wavemind"/>
+            <xpath expr="//table[hasclass('company_header', 'table-borderless')]" position="replace">
+                <div style="height: 35mm; width: 100%; display: table;">
+                    <div style="display: table-cell; vertical-align: middle; text-align: center;">
+                        <img src="/wm_project_task_portal_custom/static/src/images/wavemind_logo.png"
+                             style="max-height: 30mm; max-width: 100mm;"
+                             alt="Logo Wavemind"/>
+                    </div>
                 </div>
             </xpath>
         </template>
