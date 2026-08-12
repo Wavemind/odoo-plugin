@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <!-- Registers "Wavemind" as a selectable report layout. noupdate="1": never overwritten by Odoo updates. -->
+        <!-- Enregistre « Wavemind » comme mise en page sélectionnable dans
+             Paramètres > Sociétés > Mise en page du document.
+             noupdate="1" : jamais réécrit par une mise à jour d'Odoo. -->
         <record id="report_layout_wavemind" model="report.layout">
             <field name="name">Wavemind</field>
             <field name="sequence">1</field>
@@ -9,18 +11,9 @@
         </record>
     </data>
 
-    <data>
-        <!-- Override DIN 5008 paper format margins to visually balance left/right.
-             left=13 + 5mm address padding = 18mm visual left.
-             right=17mm visual right. Nearly equal.
-             No noupdate: re-applied on every module update to survive l10n_din5008 resets. -->
-        <record id="l10n_din5008.paperformat_euro_din_a" model="report.paperformat">
-            <field name="margin_left">13</field>
-            <field name="margin_right">17</field>
-        </record>
-        <record id="l10n_din5008.paperformat_euro_din" model="report.paperformat">
-            <field name="margin_left">13</field>
-            <field name="margin_right">17</field>
-        </record>
-    </data>
+    <!-- Les marges des formats papier DIN 5008 étaient surchargées ici, à
+         l'époque où ce layout était un fork du gabarit allemand. Il est
+         désormais calqué sur le format papier « A4 » standard d'Odoo, donc
+         plus rien ne justifie de patcher un enregistrement du cœur d'Odoo à
+         chaque mise à jour du module. Surcharge retirée en 17.0.2.0.0. -->
 </odoo>
