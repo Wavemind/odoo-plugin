@@ -2,160 +2,65 @@
 <odoo>
     <data>
 
-        <!-- Layout de facturation Wavemind — logo statique, données de société
-             prises dans Paramètres > Mise en page du document.
+        <!-- Layout de facturation Wavemind.
 
-             Ce gabarit est calqué sur web.external_layout_standard, PAS sur le
-             layout DIN 5008. La version précédente était un fork du DIN, ce qui
-             posait trois problèmes :
-               - en-tête de 45 mm de haut alors que le format papier de la
-                 société est « A4 » (marge haute 40 mm) : wkhtmltopdf rognait
-                 l'en-tête et le logo devenait invisible ;
-               - boucle l10n_din5008_addresses qui réimprimait l'adresse du
-                 client en « Adresse de livraison » + « Bénéficiaire », même
-                 quand elle était identique à l'adresse de facturation ;
-               - pied de page en dur qui se superposait à celui du DIN.
+             Contrairement a la version 17, ce template n'est PAS une copie du
+             layout DIN 5008 : c'est un heritage primaire. Il herite donc
+             automatiquement de toutes les evolutions d'Odoo (bloc adresse,
+             metadonnees du document, pagination) et ne redefinit que les deux
+             zones reellement specifiques a Wavemind : l'en-tete et le pied.
 
-             De l10n_din5008 on ne garde que les *données* (le tableau de
-             métadonnées), aucune classe de mise en page. Le format papier
-             attendu est « A4 » (marge haute 40 mm, header_spacing 35 mm),
-             celui qui est configuré sur Wavemind Sarl. -->
-        <template id="external_layout_wavemind" name="Wavemind">
-            <div>
+             C'est ce qui rend le module reellement "robuste aux mises a jour" :
+             la copie integrale de la v17 affichait des factures sans numero ni
+             date en v19, les champs l10n_din5008_* ayant disparu.
 
-                <!-- =============== EN-TÊTE =============== -->
-                <!-- Ne pas donner de hauteur fixe à ce bloc : wkhtmltopdf le
-                     dessine dans la marge haute de la page et rogne tout ce qui
-                     dépasse. Le logo se met à jour en remplaçant le fichier
-                     static/src/img/company_logo.png. -->
-                <div t-attf-class="header o_company_#{company.id}_layout"
-                     t-att-style="report_header_style">
-                    <img src="/wm_custom_invoice_logo/static/src/img/company_logo.png"
-                         style="max-height: 50px; max-width: 75mm;"
-                         alt="Logo"/>
+             Pour changer le logo : remplacer static/src/img/company_logo.png -->
+        <template id="external_layout_wavemind" name="Wavemind"
+                  inherit_id="l10n_din5008.external_layout_din5008" primary="True">
+
+            <!-- En-tete : logo statique, aligne a gauche -->
+            <xpath expr="//table[hasclass('company_header')]" position="replace">
+                <div style="height: 45mm; width: 100%; display: table;">
+                    <div style="display: table-cell; vertical-align: middle; text-align: left; padding-top: 5mm; padding-left: 5mm;">
+                        <img src="/wm_custom_invoice_logo/static/src/img/company_logo.png"
+                             style="max-height: 18mm; max-width: 80mm;"
+                             alt="Wavemind"/>
+                    </div>
                 </div>
+            </xpath>
 
-                <!-- =============== CORPS =============== -->
-                <t t-set="layout_background_url"
-                   t-value="'data:image/png;base64,%s' % company.layout_background_image.decode('utf-8')
-                             if company.layout_background_image and company.layout_background == 'Custom'
-                             else '/base/static/img/bg_background_template.jpg'
-                             if company.layout_background == 'Geometric'
-                             else ''"/>
-
-                <div t-attf-class="article o_report_layout_standard o_company_#{company.id}_layout
-                                   {{'o_report_layout_background' if company.layout_background in ['Geometric', 'Custom'] else ''}}"
-                     t-attf-style="font-size: 10pt; {{ 'background-image: url(%s);' % layout_background_url if layout_background_url else '' }}"
-                     t-att-data-oe-model="o and o._name"
-                     t-att-data-oe-id="o and o.id"
-                     t-att-data-oe-lang="o and o.env.context.get('lang')">
-
-                    <!-- Métadonnées du document (n° de facture, dates, référence).
-                         Fournies par l10n_din5008 sous forme de couples
-                         (libellé, valeur). Toujours défini, même si le module
-                         venait à disparaître : on part d'une liste vide. -->
-                    <t t-set="template_data" t-value="[]"/>
-                    <t t-if="'l10n_din5008_template_data' in company"
-                       t-set="template_data" t-value="company.l10n_din5008_template_data"/>
-                    <t t-if="o and 'l10n_din5008_template_data' in o"
-                       t-set="template_data" t-value="o.l10n_din5008_template_data"/>
-
-                    <div class="row mb-5" t-if="not skip_headers">
-
-                        <!-- Expéditeur + destinataire, à gauche (fenêtre
-                             d'enveloppe à gauche — ne pas déplacer à droite
-                             sans revoir le stock d'enveloppes). -->
-                        <div class="col-6">
-                            <div class="mb-1" style="font-size: 7.5pt;">
-                                <span t-field="company.name"/>
-                                <t t-if="company.street"> | <span t-field="company.street"/></t>
-                                <t t-if="company.street2"> | <span t-field="company.street2"/></t>
-                                <t t-if="company.zip"> | <span t-field="company.zip"/></t>
-                                <t t-if="company.city"> <span t-field="company.city"/></t>
-                                <t t-if="company.country_id"> | <span t-field="company.country_id.name"/></t>
+            <!-- Pied de page : coordonnees Wavemind sur trois colonnes.
+                 L'IBAN reste dynamique (compte bancaire porte par le document). -->
+            <xpath expr="//div[hasclass('company_details')]" position="replace">
+                <div class="company_details">
+                    <div style="display: table; width: 100%; border-top: 1px solid #0C0C0C; font-size: 8pt; padding-top: 4px; padding-bottom: 4px;">
+                        <div style="display: table-row;">
+                            <div style="display: table-cell; width: 33%; vertical-align: top; padding: 4px 0; line-height: 1.1;">
+                                Wavemind Sàrl<br/>
+                                Rue de Bourg 31<br/>
+                                1003 Lausanne<br/>
+                                Switzerland
                             </div>
-                            <div style="border-bottom: 1px solid #000000; margin-bottom: 8px;"/>
-
-                            <!-- « address » est posé par le rapport appelant
-                                 (account.report_invoice_document et consorts). -->
-                            <div t-if="address" class="address">
-                                <t t-out="address"/>
+                            <div style="display: table-cell; width: 33%; vertical-align: top; padding: 4px 0; line-height: 1.1;">
+                                +41 24 520 00 77<br/>
+                                info@wavemind.ch
                             </div>
-
-                            <!-- Adresse de livraison uniquement si elle diffère
-                                 réellement de l'adresse de facturation : c'est
-                                 le rapport qui en décide via information_block. -->
-                            <div t-if="information_block" class="mt-3">
-                                <t t-out="information_block"/>
-                            </div>
-                        </div>
-
-                        <!-- Métadonnées, à droite -->
-                        <div class="col-6">
-                            <table t-if="template_data" class="table-borderless"
-                                   style="width: 100%; font-size: 9pt;">
-                                <t t-foreach="template_data" t-as="row">
-                                    <tr>
-                                        <td style="padding: 0 10px 0 0; white-space: nowrap;">
-                                            <t t-out="row[0]"/>
-                                        </td>
-                                        <td style="padding: 0;">
-                                            <t t-out="row[1]"/>
-                                        </td>
-                                    </tr>
+                            <div style="display: table-cell; width: 34%; vertical-align: top; padding: 4px 0; line-height: 1.1;">
+                                <t t-if="company.vat">
+                                    <t t-set="default_vat_label">Tax ID</t>
+                                    <t t-out="company.account_fiscal_country_id.vat_label or default_vat_label"/>:
+                                    <t t-out="company.vat"/><br/>
                                 </t>
-                            </table>
-                        </div>
-                    </div>
-
-                    <!-- Le titre du document (« Facture client INV/…. ») est
-                         rendu par le rapport lui-même, comme dans le layout
-                         standard Odoo. Ne pas en ajouter un ici : on en
-                         obtiendrait deux. -->
-                    <t t-out="0"/>
-                </div>
-
-                <!-- =============== PIED DE PAGE =============== -->
-                <!-- Contenu tiré de Paramètres > Sociétés > Mise en page du
-                     document (company_details et report_footer) plutôt que
-                     codé en dur : un changement d'adresse ou de numéro de
-                     téléphone ne demande plus de redéploiement. -->
-                <div t-attf-class="footer o_standard_footer o_company_#{company.id}_layout">
-                    <div style="border-top: 1px solid #0C0C0C; padding-top: 4px; font-size: 7.5pt;">
-                        <div class="row">
-                            <div class="col-4" t-if="company.company_details">
-                                <span t-field="company.company_details"/>
+                                <t t-if="o and 'partner_bank_id' in o and o.partner_bank_id">
+                                    IBAN: <t t-out="o.partner_bank_id.acc_number"/><br/>
+                                    <t t-if="o.partner_bank_id.bank_id.bic">BIC: <t t-out="o.partner_bank_id.bank_id.bic"/></t>
+                                </t>
                             </div>
-                            <div class="col-4" t-if="company.report_footer">
-                                <span t-field="company.report_footer"/>
-                            </div>
-                            <div class="col-4">
-                                <t t-set="footer_bank"
-                                   t-value="o.partner_bank_id
-                                            if o and 'partner_bank_id' in o and o.partner_bank_id
-                                            else company.partner_id.bank_ids[:1]"/>
-                                <div t-if="footer_bank">
-                                    <span class="text-nowrap">IBAN : <span t-field="footer_bank.acc_number"/></span>
-                                    <t t-if="footer_bank.bank_id.bic">
-                                        <br/>BIC : <span t-field="footer_bank.bank_id.bic"/>
-                                    </t>
-                                </div>
-                                <!-- N° de TVA étranger imposé par une position
-                                     fiscale : le seul cas où il ne figure pas
-                                     déjà dans report_footer. -->
-                                <div t-if="forced_vat">
-                                    <t t-out="company.account_fiscal_country_id.vat_label or 'Tax ID'"/> :
-                                    <span t-out="forced_vat"/>
-                                </div>
-                            </div>
-                        </div>
-                        <div t-if="report_type == 'pdf'" class="text-end text-muted mt-1">
-                            Page <span class="page"/> / <span class="topage"/>
                         </div>
                     </div>
                 </div>
+            </xpath>
 
-            </div>
         </template>
 
     </data>

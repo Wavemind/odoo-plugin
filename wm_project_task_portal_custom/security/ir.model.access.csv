@@ -1,6 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_project_task_portal,access_project_task_portal,project.model_project_task,base.group_portal,1,1,1,0
-access_project_project_portal,access_project_project_portal,project.model_project_project,base.group_portal,1,0,0,0
-access_sale_order_line_portal,access_sale_order_line_portal,sale.model_sale_order_line,base.group_portal,1,0,0,0
-access_account_move_line_portal,access_account_move_line_portal,account.model_account_move_line,base.group_portal,1,0,0,0
-access_project_task_type_portal,access_project_task_type_portal,project.model_project_task_type,base.group_portal,1,0,0,0

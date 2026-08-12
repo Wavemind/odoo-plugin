@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Icônes des applications du menu principal.
+
+         Pas de noupdate : les icônes sont réappliquées à chaque mise à jour du
+         module, ce qui les rend insensibles aux réinitialisations d'Odoo.
+
+         Pour activer une icône :
+           1. déposer le PNG dans static/src/img/ sous le nom indiqué
+           2. décommenter le bloc correspondant
+           3. mettre à jour le module
+
+         Format : PNG carré, 140x140 px, fond transparent. Odoo redimensionne,
+         mais part d'une image nette. Les icônes natives sont blanches sur fond
+         coloré — garder ce principe évite un menu bariolé. Votre bleu de marque
+         est #33658a, votre noir #0c0c0c.
+
+         Il n'est pas nécessaire de toutes les remplacer : ne changez que celles
+         qui vous gênent, les autres restent celles d'Odoo. -->
+    <data>
+
+        <!--
+        <record id="crm.crm_menu_root" model="ir.ui.menu">
+            <field name="web_icon">wm_branding,static/src/img/crm.png</field>
+        </record>
+
+        <record id="sale.sale_menu_root" model="ir.ui.menu">
+            <field name="web_icon">wm_branding,static/src/img/ventes.png</field>
+        </record>
+
+        <record id="account.menu_finance" model="ir.ui.menu">
+            <field name="web_icon">wm_branding,static/src/img/comptabilite.png</field>
+        </record>
+
+        <record id="project.menu_main_pm" model="ir.ui.menu">
+            <field name="web_icon">wm_branding,static/src/img/projets.png</field>
+        </record>
+
+        <record id="hr_timesheet.timesheet_menu_root" model="ir.ui.menu">
+            <field name="web_icon">wm_branding,static/src/img/feuilles_de_temps.png</field>
+        </record>
+
+        <record id="contacts.menu_contacts" model="ir.ui.menu">
+            <field name="web_icon">wm_branding,static/src/img/contacts.png</field>
+        </record>
+
+        <record id="hr.menu_hr_root" model="ir.ui.menu">
+            <field name="web_icon">wm_branding,static/src/img/employes.png</field>
+        </record>
+
+        <record id="om_hr_payroll.menu_hr_payroll_root" model="ir.ui.menu">
+            <field name="web_icon">wm_branding,static/src/img/paie.png</field>
+        </record>
+
+        <record id="mail.menu_root_discuss" model="ir.ui.menu">
+            <field name="web_icon">wm_branding,static/src/img/discussion.png</field>
+        </record>
+
+        <record id="calendar.mail_menu_calendar" model="ir.ui.menu">
+            <field name="web_icon">wm_branding,static/src/img/calendrier.png</field>
+        </record>
+        -->
+
+    </data>
+</odoo>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="mail_template_timesheet_reminder" model="mail.template">
+            <field name="name">Rappel : feuilles de temps</field>
+            <field name="model_id" ref="hr.model_hr_employee"/>
+            <field name="email_from">{{ user.company_id.email_formatted or user.email_formatted }}</field>
+            <field name="email_to">{{ object.work_email }}</field>
+            <field name="subject">Feuilles de temps — semaine du {{ ctx.get('wm_start') }}</field>
+            <field name="lang">{{ object.user_id.lang }}</field>
+            <field name="body_html" type="html">
+<div style="font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;font-size:14px;line-height:1.6;color:#0c0c0c;">
+    <p>Bonjour <t t-out="object.name or ''"/>,</p>
+
+    <p>
+        Sur la semaine du <t t-out="ctx.get('wm_start')"/> au <t t-out="ctx.get('wm_end')"/>,
+        <strong><t t-out="ctx.get('wm_hours')"/> heure(s)</strong> ont été saisies sur vos tâches,
+        pour un attendu de <t t-out="ctx.get('wm_min_hours')"/>.
+        Il manque donc <strong><t t-out="ctx.get('wm_missing')"/> heure(s)</strong>.
+    </p>
+
+    <t t-if="ctx.get('wm_tasks')">
+        <p style="margin-bottom:6px;">Vos tâches ouvertes, pour vous faciliter la saisie :</p>
+        <ul style="margin-top:0;">
+            <t t-foreach="ctx.get('wm_tasks')" t-as="task">
+                <li>
+                    <t t-out="task.name"/>
+                    <t t-if="task.project_id"> — <span style="color:#33658a;"><t t-out="task.project_id.name"/></span></t>
+                </li>
+            </t>
+        </ul>
+    </t>
+    <t t-else="">
+        <p>Aucune tâche ouverte ne vous est assignée actuellement.</p>
+    </t>
+
+    <p style="color:#4a5560;font-size:13px;border-top:1px solid #dde4ea;padding-top:12px;margin-top:22px;">
+        Les congés sont exclus de ce décompte. Si ces heures ont été passées sur autre chose,
+        signalez-le simplement — l'objectif est de savoir ce que coûtent réellement nos forfaits,
+        pas de compter les minutes.
+    </p>
+</div>
+            </field>
+            <field name="auto_delete" eval="False"/>
+        </record>
+    </data>
+</odoo>

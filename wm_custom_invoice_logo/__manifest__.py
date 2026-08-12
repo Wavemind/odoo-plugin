@@ -1,17 +1,19 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'WM Custom Invoice Logo',
-    'version': '17.0.2.0.0',
-    'summary': 'Layout de facturation Wavemind — logo statique, gabarit A4 standard',
+    'version': '19.0.1.0.0',
+    'summary': "Layout de facturation Wavemind — logo statique, pied de page fixe",
     'description': """
-Mise en page des documents Wavemind (factures, devis, …).
+Mise en page de facturation Wavemind, construite par **héritage primaire** du
+layout DIN 5008 d'Odoo.
 
-Calqué sur web.external_layout_standard, avec un logo servi par le module
-plutôt que par le champ logo de la société. Ne dépend de l10n_din5008 que
-pour le tableau de métadonnées du document (n° de pièce, dates, référence) —
-aucune classe de mise en page DIN n'est utilisée.
+Seules deux zones sont redéfinies : l'en-tête (logo statique) et le pied de page
+(coordonnées Wavemind). Tout le reste — bloc adresse, métadonnées du document,
+pagination — est hérité et suit donc automatiquement les évolutions d'Odoo.
 
-Format papier attendu : « A4 » (marge haute 40 mm, header_spacing 35 mm).
+La version 17 était une copie intégrale du layout : elle aurait affiché des
+factures sans numéro ni date en version 19, les champs `l10n_din5008_*` ayant
+disparu du standard.
 """,
     'author': 'Wavemind',
     'license': 'LGPL-3',
