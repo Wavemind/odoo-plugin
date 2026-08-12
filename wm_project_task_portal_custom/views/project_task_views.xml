@@ -49,4 +49,16 @@
             </xpath>    
         </field>
     </record>
+
+    <!-- Vue formulaire des stages — flag de validation portail (Story 1.2) -->
+    <record id="view_task_type_form_validation_flag" model="ir.ui.view">
+        <field name="name">project.task.type.form.validation.flag</field>
+        <field name="model">project.task.type</field>
+        <field name="inherit_id" ref="project.task_type_edit"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='fold']" position="after">
+                <field name="is_awaiting_validation"/>
+            </xpath>
+        </field>
+    </record>
 </odoo>

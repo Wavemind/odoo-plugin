@@ -9,6 +9,8 @@
     'depends': [
         'portal',
         'project',
+        'sale',
+        'account',
         'web',
         'web_editor',
         'base_setup',
@@ -23,6 +25,7 @@
         'views/external_layout_override.xml',  # override du layout DIN5008
         'security/ir.model.access.csv',
         'security/project_task_security.xml',
+        'security/wm_portal_rules.xml',
     ],
    'assets': {
         'web.assets_frontend': [
