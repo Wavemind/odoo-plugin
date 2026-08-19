@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Favicon Wavemind.
+
+         Odoo 19 a retire le champ `favicon` de res.company : il n'existe plus que
+         sur le module Website, non installe ici. Le gabarit web.layout prevoit en
+         revanche une variable `x_icon` qu'aucun module du coeur ne renseigne —
+         c'est le point d'accroche prevu pour surcharger l'icone.
+
+         Pour changer le favicon : remplacer static/src/img/favicon.png, puis
+         mettre a jour le module. -->
+    <template id="favicon_wavemind" inherit_id="web.layout" name="Favicon Wavemind">
+        <xpath expr="//link[@rel='shortcut icon']" position="attributes">
+            <attribute name="t-att-href">'/wm_branding/static/src/img/favicon.png'</attribute>
+            <attribute name="type">image/png</attribute>
+        </xpath>
+    </template>
+</odoo>

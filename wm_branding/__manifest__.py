@@ -19,8 +19,9 @@ Pour ajouter ou changer une icône :
     'author': 'Wavemind',
     'license': 'LGPL-3',
     'category': 'Technical',
-    'depends': ['base'],
-    'data': ['data/menu_icons.xml'],
+    'depends': ['base', 'web'],
+    'data': [
+        'views/favicon.xml','data/menu_icons.xml'],
     'installable': True,
     'application': False,
 }
