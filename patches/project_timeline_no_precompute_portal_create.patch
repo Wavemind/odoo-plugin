@@ -1,0 +1,28 @@
+diff --git a/project_timeline/models/project_task.py b/project_timeline/models/project_task.py
+index 4f451ff..e55844d 100644
+--- a/project_timeline/models/project_task.py
++++ b/project_timeline/models/project_task.py
+@@ -11,17 +11,21 @@ from odoo.tools.sql import column_exists, create_column
+ class ProjectTask(models.Model):
+     _inherit = "project.task"
+ 
++    # precompute retire volontairement (Wavemind, 2026-08-24) : un champ precompute
++    # force l'ORM a instancier un enregistrement transitoire pendant le create, ce qui
++    # lit les colonnes magiques (create_uid, write_uid). Ces colonnes sont hors de la
++    # liste blanche portail d'Odoo 19, donc toute creation de tache par un utilisateur
++    # du portail (Project Sharing) echouait en AccessError. Les computes restent
++    # stored ; ils sont simplement evalues apres l'insertion.
+     planned_date_start = fields.Datetime(
+         compute="_compute_planned_date_start",
+         store=True,
+         readonly=False,
+-        precompute=True,
+     )
+     planned_date_end = fields.Datetime(
+         compute="_compute_planned_date_end",
+         store=True,
+         readonly=False,
+-        precompute=True,
+     )
+ 
+     @api.depends("date_assign")
