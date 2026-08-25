@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Vues du partage de projet : c'est là que le client crée et modifie.
+         On y ajoute le type de tâche, sans toucher au reste. -->
+
+    <record id="project_sharing_task_form_task_type" model="ir.ui.view">
+        <field name="name">project.sharing.project.task.form.wm.task.type</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.project_sharing_project_task_view_form"/>
+        <field name="arch" type="xml">
+            <field name="tag_ids" position="before">
+                <field name="task_type"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="project_sharing_task_list_task_type" model="ir.ui.view">
+        <field name="name">project.sharing.project.task.list.wm.task.type</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.project_sharing_project_task_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="task_type" optional="show"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

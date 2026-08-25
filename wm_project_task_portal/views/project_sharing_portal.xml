@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        L'espace de partage de projet est servi par `web.layout`, dont le corps
+        est un emplacement libre (`<t t-out="0"/>`) qu'Odoo laisse vide ici : le
+        client web s'y monte par-dessus, en ajoutant ses éléments à la suite.
+        On profite de cet emplacement pour poser au-dessus le même bandeau que
+        le portail — logo, nom, liens de compte — afin que le client ne sente
+        pas la rupture entre /my/... et l'espace de travail.
+
+        Le balisage reprend volontairement les classes du portail
+        (navbar / bg-light / container) : elles existent aussi dans le bundle
+        du client web, donc le rendu est le même des deux côtés.
+    -->
+    <template id="project_sharing_portal_header" inherit_id="project.project_sharing_portal">
+        <xpath expr="//t[@t-call='web.layout']" position="inside">
+            <header id="top" class="wm_sharing_header">
+                <nav class="navbar navbar-expand navbar-light bg-light">
+                    <div class="container">
+                        <a href="/my/home" class="navbar-brand logo">
+                            <img src="/logo.png" alt="Wavemind" title="Wavemind"/>
+                        </a>
+                        <ul class="nav navbar-nav ms-auto align-items-center">
+                            <li class="nav-item">
+                                <a href="/my/tasks" class="nav-link">Mes tâches</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/my/home" class="nav-link">Mon compte</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/web/session/logout?redirect=/" class="nav-link">Déconnexion</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </header>
+        </xpath>
+    </template>
+
+</odoo>

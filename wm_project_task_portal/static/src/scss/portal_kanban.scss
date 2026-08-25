@@ -1,0 +1,382 @@
+// Tableau kanban du portail.
+//
+// L'objectif est la continuité visuelle avec l'espace de partage de projet,
+// lui-même ramené à la palette du portail. On reprend donc les mêmes repères :
+// colonnes sobres, cartes blanches bordées, rayon 0.375rem.
+
+// Les jetons viennent de wm_brand.scss, compilé juste avant dans le bundle :
+// une seule source de vérité pour la couleur, le rayon et la police.
+$wm-portal-primary: $wm-primary;
+$wm-portal-border: $wm-border;
+$wm-portal-muted: $wm-surface;
+$wm-portal-radius: $wm-radius-sm;   // cartes
+$wm-column-radius: $wm-radius;      // colonnes, comme les blocs du site
+$wm-column-width: 19rem;
+
+// Le portail enferme son contenu dans un `.container` à largeur bornée. Un
+// tableau kanban y étouffe : on élargit le conteneur sur cette page seulement.
+// `wm_tasks_kanban` est posé sur #wrapwrap par le gabarit via `pageName`, donc
+// la règle ne peut pas déborder sur les autres pages de /my.
+#wrapwrap.wm_tasks_kanban {
+    // ATTENTION : ne pas écrire `.container` ici. La chaîne de compilation des
+    // feuilles frontend d'Odoo remplace `.container` par `.o_container_small`,
+    // alors que le gabarit du portail pose bien la classe `container` dans le
+    // DOM — la règle ne s'appliquerait donc jamais. Le sélecteur d'attribut
+    // échappe à cette réécriture.
+    .o_portal_wrap > [class~="container"] {
+        max-width: 100%;
+    }
+}
+
+.wm_kanban {
+    // Le tableau déborde horizontalement quand il y a beaucoup d'étapes :
+    // c'est le comportement attendu, on défile.
+    overflow-x: auto;
+    overflow-y: hidden;
+    position: relative;
+    padding: 1.15rem;
+    border-radius: $wm-radius;
+
+    // Ce fond n'est pas décoratif : `backdrop-filter` floute CE QUI EST
+    // DERRIÈRE l'élément. Sur la page blanche du portail, les colonnes
+    // flouteraient du blanc et l'effet de verre serait strictement invisible.
+    // Deux halos très dilués aux couleurs de la marque suffisent à donner
+    // au flou quelque chose à travailler.
+    background:
+        radial-gradient(38rem 22rem at 12% -10%, rgba(239, 84, 79, 0.14), transparent 62%),
+        radial-gradient(34rem 20rem at 88% 110%, rgba(12, 12, 12, 0.10), transparent 64%),
+        linear-gradient(140deg, #fbfbfc 0%, #f1f2f4 100%);
+
+    .wm_kanban_board {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        min-height: 12rem;
+    }
+
+    .wm_kanban_column {
+        flex: 0 0 $wm-column-width;
+        max-width: $wm-column-width;
+        // --- Verre ---------------------------------------------------
+        // Fond translucide + flou de l'arrière-plan + saturation : c'est la
+        // combinaison qui donne la matière. Le liseré clair en ombre interne
+        // imite le reflet sur l'arête supérieure.
+        background-color: rgba(255, 255, 255, 0.42);
+        -webkit-backdrop-filter: blur(18px) saturate(165%);
+        backdrop-filter: blur(18px) saturate(165%);
+        border: 1px solid rgba(255, 255, 255, 0.75);
+        border-radius: $wm-column-radius;
+        padding: 0.9rem;
+        box-shadow:
+            // Reflet sur l'arête supérieure : c'est lui qui fait le verre,
+            // on n'y touche pas.
+            inset 0 1px 0 rgba(255, 255, 255, 0.9),
+            // Ombre portée allégée de moitié (opacité 0.08 -> 0.04) et
+            // resserrée, pour que les colonnes posent moins lourdement.
+            0 6px 18px rgba(12, 12, 12, 0.04);
+    }
+
+    .wm_kanban_column_header {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.75rem;
+    }
+
+    // Bouton de repliage : discret tant qu'on ne survole pas la colonne.
+    .wm_kanban_fold {
+        flex: 0 0 auto;
+        border: 0;
+        background: transparent;
+        color: #6c757d;
+        padding: 0;
+        line-height: 1;
+        cursor: pointer;
+        opacity: 0.45;
+        transition: opacity 120ms ease, transform 120ms ease;
+
+        &:hover, &:focus-visible { opacity: 1; color: $wm-portal-primary; }
+    }
+    .wm_kanban_column:hover .wm_kanban_fold { opacity: 0.9; }
+
+    .wm_kanban_column_title {
+        flex: 1 1 auto;
+        font-weight: 600;
+        color: $wm-portal-primary;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .wm_kanban_column_count {
+        flex: 0 0 auto;
+        min-width: 1.5rem;
+        text-align: center;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #fff;
+        background-color: $wm-portal-primary;
+        border-radius: $wm-radius-pill;
+        padding: 0.05rem 0.45rem;
+    }
+
+    .wm_kanban_cards {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        min-height: 3rem;
+        border-radius: $wm-portal-radius;
+        transition: background-color 120ms ease;
+    }
+
+    // Cible de dépôt survolée
+    .wm_kanban_cards.wm_kanban_dropzone {
+        background-color: rgba(0, 0, 0, 0.05);
+        outline: 2px dashed $wm-portal-border;
+        outline-offset: 2px;
+    }
+
+    .wm_kanban_card {
+        background-color: rgba(255, 255, 255, 0.88);
+        -webkit-backdrop-filter: blur(6px);
+        backdrop-filter: blur(6px);
+        border: 1px solid rgba(255, 255, 255, 0.9);
+        border-radius: $wm-portal-radius;
+        transition: border-color 120ms ease, box-shadow 120ms ease;
+
+        &:hover {
+            border-color: $wm-portal-primary;
+        }
+        &.wm_kanban_dragging {
+            opacity: 0.45;
+        }
+        &.wm_kanban_saving {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+    }
+
+    // Le lien couvre toute la carte : cliquer n'importe où ouvre la tâche.
+    .wm_kanban_card_link {
+        display: block;
+        padding: 0.65rem 0.75rem;
+        color: inherit;
+        text-decoration: none;
+
+        &:hover { color: inherit; }
+    }
+
+    .wm_kanban_card_title {
+        font-weight: 600;
+        line-height: 1.25;
+        margin-bottom: 0.15rem;
+    }
+
+    .wm_kanban_card_meta {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.5rem;
+        font-size: 0.8rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .wm_kanban_card_project {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .wm_kanban_card_ref {
+        flex: 0 0 auto;
+        // Chiffres à chasse fixe : les numéros s'alignent d'une carte à l'autre.
+        font-variant-numeric: tabular-nums;
+        opacity: 0.75;
+    }
+
+    .wm_kanban_card_tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+        margin-bottom: 0.4rem;
+    }
+
+    .wm_kanban_card_footer {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.8rem;
+    }
+
+    // Type de tâche : trois pastilles lisibles d'un coup d'œil
+    .wm_kanban_type {
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        border-radius: $wm-radius-pill;
+        padding: 0.05rem 0.45rem;
+        border: 1px solid transparent;
+    }
+    .wm_kanban_type_bug      { background-color: #f8d7da; color: #842029; }
+    .wm_kanban_type_feature  { background-color: #d1e7dd; color: #0f5132; }
+    .wm_kanban_type_question { background-color: #e2e3e5; color: #41464b; }
+}
+
+// --- Colonne repliée ------------------------------------------------------
+// Même principe que le kanban d'Odoo : la colonne se réduit à une bande
+// verticale portant le nom de l'étape et son compteur. Elle reste une cible de
+// dépôt valide, on peut donc y glisser une carte sans la déplier.
+.wm_kanban .wm_kanban_column.wm_kanban_folded {
+    flex: 0 0 2.75rem;
+    max-width: 2.75rem;
+    padding: 0.75rem 0.35rem;
+    cursor: pointer;
+
+    .wm_kanban_column_header {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.6rem;
+        margin-bottom: 0;
+    }
+
+    .wm_kanban_fold {
+        transform: rotate(180deg);
+    }
+
+    .wm_kanban_column_title {
+        flex: 0 1 auto;
+        writing-mode: vertical-rl;
+        max-height: 14rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .wm_kanban_cards {
+        // Repliée mais toujours présente : indispensable pour rester une cible
+        // de dépôt. `display: none` la retirerait du flux et casserait le
+        // glisser-déposer vers une étape repliée.
+        height: 0;
+        min-height: 0;
+        overflow: hidden;
+        margin: 0;
+    }
+}
+
+// Colonne survolée pendant un glisser : nécessaire pour les colonnes repliées,
+// dont la zone de dépôt est trop fine pour être visible.
+.wm_kanban .wm_kanban_column.wm_kanban_dropzone_column {
+    border-color: $wm-portal-primary;
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+// Repli de sécurité : Firefox sans `backdrop-filter` activé, ou tout moteur
+// qui ne le gère pas, afficherait des colonnes quasi transparentes et
+// illisibles. On leur sert un fond opaque.
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .wm_kanban .wm_kanban_column { background-color: rgba(255, 255, 255, 0.92); }
+    .wm_kanban .wm_kanban_card { background-color: #fff; }
+}
+
+// Certains utilisateurs demandent explicitement moins de transparence au
+// niveau du système : on la leur retire.
+@media (prefers-reduced-transparency: reduce) {
+    .wm_kanban .wm_kanban_column { background-color: rgba(255, 255, 255, 0.95); }
+    .wm_kanban .wm_kanban_card { background-color: #fff; }
+}
+
+// ===========================================================================
+// Défilement horizontal : flèches, fondus de bord, barre discrète
+//
+// La barre native se place sous le contenu : avec des colonnes hautes, elle
+// tombe sous le pli et devient introuvable. On ne la supprime pas — on la
+// rend secondaire, et on donne deux affordances qui restent, elles, visibles.
+// ===========================================================================
+$wm-toggle-scroll: #EF544F;
+
+.wm_kanban_wrap {
+    position: relative;
+
+    // Fondus signalant qu'il reste du contenu de part et d'autre.
+    // Posés par le script selon la position réelle du défilement.
+    &::before,
+    &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 3.5rem;
+        z-index: 2;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 160ms ease;
+        border-radius: $wm-radius;
+    }
+    &::before {
+        left: 0;
+        background: linear-gradient(to right, rgba(243, 244, 246, 0.95), rgba(243, 244, 246, 0));
+    }
+    &::after {
+        right: 0;
+        background: linear-gradient(to left, rgba(243, 244, 246, 0.95), rgba(243, 244, 246, 0));
+    }
+    &.wm_can_prev::before { opacity: 1; }
+    &.wm_can_next::after { opacity: 1; }
+}
+
+.wm_kanban_nav {
+    // Calées en haut du tableau, à hauteur des en-têtes de colonnes : c'est là
+    // que l'œil est quand on cherche à se déplacer latéralement. Un montage
+    // `sticky` suivrait le défilement vertical, mais il impose un `float` qui
+    // perturbe la mise en page — pas le bon compromis ici.
+    position: absolute;
+    top: 3.6rem;
+    z-index: 3;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    border-radius: $wm-radius-pill;
+    background-color: rgba(255, 255, 255, 0.8);
+    -webkit-backdrop-filter: blur(12px) saturate(160%);
+    backdrop-filter: blur(12px) saturate(160%);
+    box-shadow: 0 4px 14px rgba(12, 12, 12, 0.10);
+    color: $wm-portal-primary;
+    cursor: pointer;
+    transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease;
+
+    &:hover, &:focus-visible {
+        background-color: $wm-toggle-scroll;
+        border-color: $wm-toggle-scroll;
+        color: #fff;
+    }
+
+    // Rendues visibles par le script, uniquement s'il y a matière à défiler.
+    &.wm_visible { display: inline-flex; }
+}
+
+.wm_kanban_nav_prev { left: 0.55rem; }
+.wm_kanban_nav_next { right: 0.55rem; }
+
+.wm_kanban {
+    // Barre fine, aux couleurs de la marque, plutôt que la barre système.
+    scrollbar-width: thin;
+    scrollbar-color: rgba(239, 84, 79, 0.55) transparent;
+
+    &::-webkit-scrollbar { height: 10px; }
+    &::-webkit-scrollbar-track { background: transparent; }
+    &::-webkit-scrollbar-thumb {
+        background-color: rgba(239, 84, 79, 0.5);
+        border-radius: $wm-radius-pill;
+        border: 3px solid transparent;
+        background-clip: content-box;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+        background-color: rgba(239, 84, 79, 0.85);
+        background-clip: content-box;
+    }
+}

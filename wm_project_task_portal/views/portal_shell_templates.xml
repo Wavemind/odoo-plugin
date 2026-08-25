@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Navigation dans le bandeau. Insérée AVANT #top_menu, qui porte `ms-auto`
+         et reste donc calé à droite avec le menu du compte. -->
+    <template id="portal_header_nav" inherit_id="portal.frontend_layout">
+        <xpath expr="//ul[@id='top_menu']" position="before">
+            <ul class="nav navbar-nav wm_header_nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/my/home">Accueil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/my/tasks">Tâches</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/my/projects">Projets</a>
+                </li>
+            </ul>
+        </xpath>
+    </template>
+
+    <!-- Pied de page : on remplace la mention « Powered by Odoo » par les
+         coordonnées de la société. Les valeurs sont lues sur res_company au
+         rendu, rien n'est écrit en dur : si le contact change dans Odoo, le
+         pied de page suit. -->
+    <template id="portal_footer_contact" inherit_id="web.frontend_layout">
+        <xpath expr="//t[@t-call='web.brand_promotion']" position="replace">
+            <div class="wm_footer_contact">
+                <a t-if="res_company.email" t-attf-href="mailto:#{res_company.email}">
+                    <i class="fa fa-envelope-o me-1" aria-hidden="true"/>
+                    <t t-out="res_company.email"/>
+                </a>
+                <t t-if="res_company.phone">
+                    <span class="wm_footer_sep">·</span>
+                    <span>
+                        <i class="fa fa-phone me-1" aria-hidden="true"/>
+                        <t t-out="res_company.phone"/>
+                    </span>
+                </t>
+                <t t-if="res_company.website">
+                    <span class="wm_footer_sep">·</span>
+                    <a t-att-href="res_company.website" target="_blank" rel="noopener">
+                        <i class="fa fa-globe me-1" aria-hidden="true"/>
+                        <t t-out="res_company.website.split('//')[-1]"/>
+                    </a>
+                </t>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Formulaire de création d'une tâche depuis le portail. -->
+    <template id="portal_task_new" name="Nouvelle tâche">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+            <div class="wm_form_head">
+                <h3 class="mb-0">Nouvelle tâche</h3>
+                <a href="/my/tasks" class="btn wm_btn_ghost">Annuler</a>
+            </div>
+
+            <div t-if="error" class="alert alert-danger" role="alert" t-out="error"/>
+
+            <t t-if="not projects">
+                <div class="alert alert-warning" role="alert">
+                    Aucun projet ne vous est ouvert en création. Contactez Wavemind.
+                </div>
+            </t>
+
+            <form t-else="" method="post" action="/my/tasks/new"
+                  enctype="multipart/form-data" class="wm_form">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                <div class="wm_field">
+                    <label for="project_id">Projet</label>
+                    <select name="project_id" id="project_id" required="required">
+                        <t t-foreach="projects" t-as="project">
+                            <option t-att-value="project.id"
+                                    t-att-selected="'selected' if str(project.id) == str(data.get('project_id')) else None"
+                                    t-out="project.name"/>
+                        </t>
+                    </select>
+                </div>
+
+                <div class="wm_field">
+                    <label for="name">Titre</label>
+                    <input type="text" name="name" id="name" required="required"
+                           maxlength="200" t-att-value="data.get('name') or ''"
+                           placeholder="Ex. : le bouton d'export ne répond plus"/>
+                </div>
+
+                <div class="wm_field wm_field_pair">
+                    <div>
+                        <label for="task_type">Type</label>
+                        <select name="task_type" id="task_type">
+                            <t t-foreach="task_types" t-as="option">
+                                <option t-att-value="option[0]"
+                                        t-att-selected="'selected' if option[0] == (data.get('task_type') or 'question') else None"
+                                        t-out="option[1]"/>
+                            </t>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="priority">Priorité</label>
+                        <select name="priority" id="priority">
+                            <t t-foreach="priorities" t-as="option">
+                                <option t-att-value="option[0]"
+                                        t-att-selected="'selected' if option[0] == (data.get('priority') or '1') else None"
+                                        t-out="option[1]"/>
+                            </t>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="wm_field">
+                    <label for="description">Description</label>
+                    <textarea name="description" id="description" rows="7"
+                              placeholder="Ce que vous attendez, comment reproduire le problème, ce que vous avez déjà essayé…"
+                              t-out="data.get('description') or ''"/>
+                </div>
+
+                <div class="wm_field">
+                    <label for="attachments">Pièces jointes</label>
+                    <input type="file" name="attachments" id="attachments" multiple="multiple"/>
+                </div>
+
+                <div class="wm_form_actions">
+                    <button type="submit" class="btn wm_btn_new">
+                        <i class="oi oi-plus" aria-hidden="true"/>
+                        <span>Créer la tâche</span>
+                    </button>
+                </div>
+            </form>
+        </t>
+    </template>
+
+</odoo>

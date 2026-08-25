@@ -1,0 +1,114 @@
+// Rhabillage de l'espace de partage de projet aux couleurs du portail.
+//
+// L'espace de partage est le client web d'Odoo : on ne peut pas le transformer
+// en portail, mais on peut le rapprocher fortement. Deux constats utiles :
+//   * la police est DÉJÀ la même des deux côtés (--font-sans-serif identique) ;
+//   * ce qui saute aux yeux, c'est la couleur primaire (#33658a côté back-office
+//     contre #0c0c0c côté portail), le fond, et la densité.
+//
+// Tout est porté par `.o_project_sharing`, la classe posée sur <body> par
+// Odoo pour cette page uniquement : rien ne fuit vers le back-office.
+
+// Jetons relevés sur wavemind.ch, définis dans wm_brand.scss.
+// (Le secondaire était #F0CDA8 — une valeur de configuration Odoo, pas celle
+// du site, qui est un corail #f0544f.)
+$wm-portal-primary: $wm-primary;
+$wm-portal-secondary: $wm-secondary;
+$wm-portal-body: $wm-body;
+$wm-portal-radius: $wm-radius-sm;
+$wm-portal-border: $wm-border;
+
+.o_project_sharing {
+
+    // --- Structure : bandeau figé en haut, client web en dessous -----------
+    // Le client web se monte à la suite du bandeau dans <body> ; sans mise en
+    // page explicite il déborderait sous le pli.
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+    background-color: #fff;
+    color: $wm-portal-body;
+
+    > .wm_sharing_header {
+        flex: 0 0 auto;
+
+        .navbar {
+            border-bottom: 1px solid $wm-portal-border;
+        }
+        .navbar-brand img {
+            max-height: 34px;
+            width: auto;
+        }
+        .nav-link {
+            color: $wm-portal-body;
+            &:hover, &:focus { color: $wm-portal-primary; }
+        }
+    }
+
+    > .o_action_manager {
+        flex: 1 1 auto;
+        min-height: 0;
+    }
+
+    // --- Palette ----------------------------------------------------------
+    // Les composants qui lisent les variables Bootstrap suivent tout seuls ;
+    // ceux dont la couleur est figée à la compilation sont repris à la main
+    // juste en dessous.
+    --primary: #{$wm-portal-primary};
+    --secondary: #{$wm-portal-secondary};
+    --border-radius: #{$wm-portal-radius};
+
+    .btn-primary {
+        background-color: $wm-portal-primary;
+        border-color: $wm-portal-primary;
+        &:hover, &:focus, &:active {
+            background-color: lighten($wm-portal-primary, 15%);
+            border-color: lighten($wm-portal-primary, 15%);
+        }
+    }
+    .btn-secondary {
+        background-color: $wm-portal-secondary;
+        border-color: $wm-portal-secondary;
+        color: $wm-portal-body;
+    }
+    .text-primary { color: $wm-portal-primary !important; }
+
+    // --- Barre de contrôle : alignée sur le bandeau ------------------------
+    .o_control_panel {
+        background-color: #fff;
+        border-bottom: 1px solid $wm-portal-border;
+        padding-top: 12px !important;
+        padding-bottom: 8px;
+    }
+
+    // --- Kanban : cartes à l'allure du portail -----------------------------
+    .o_kanban_renderer {
+        background-color: #fff;
+    }
+    .o_kanban_group {
+        background-color: transparent;
+    }
+    .o_kanban_header {
+        text-transform: none;
+        font-weight: 600;
+        color: $wm-portal-body;
+    }
+    .o_kanban_record {
+        border: 1px solid $wm-portal-border;
+        border-radius: $wm-portal-radius;
+        box-shadow: none;
+
+        &:hover {
+            border-color: $wm-portal-primary;
+        }
+    }
+
+    // --- Liste ------------------------------------------------------------
+    .o_list_view {
+        thead th {
+            border-bottom: 1px solid $wm-portal-border;
+            font-weight: 600;
+        }
+    }
+}

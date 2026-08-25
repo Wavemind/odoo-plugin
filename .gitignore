@@ -1,1 +1,15 @@
 __pycache__/
+
+# Outils locaux, hors du périmètre du dépôt
+.claude/
+.cursor/
+_bmad/
+_bmad-output/
+
+# Polices PP Neue Montreal — fonte COMMERCIALE (Pangram Pangram).
+# Ce dépôt est public : les versionner reviendrait à les redistribuer.
+# Elles sont déployées directement sur le serveur, dans
+#   …-odoo-addons/wavemind/wm_project_task_portal/static/src/fonts/
+# Voir wm_project_task_portal/POLICES.md
+wm_project_task_portal/static/src/fonts/*.woff2
+wm_project_task_portal/static/src/fonts/*.otf

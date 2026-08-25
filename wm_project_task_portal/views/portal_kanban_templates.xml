@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ====================================================================
+         Barre d'outils unique, partagée par le kanban et la liste.
+         Trois zones sur une seule ligne : actions à gauche, recherche au
+         centre, filtres et bascule à droite. La grille en trois colonnes
+         centre la recherche sur la PAGE, et non entre ses deux voisines —
+         c'est la seule façon qu'elle reste centrée quand les côtés changent
+         de largeur.
+         ==================================================================== -->
+    <template id="portal_tasks_toolbar" name="Barre d'outils des tâches">
+        <div class="wm_toolbar">
+
+            <div class="wm_toolbar_left">
+                <a href="/my/tasks/new" class="btn wm_btn_new">
+                    <i class="oi oi-plus" aria-hidden="true"/>
+                    <span>Nouvelle tâche</span>
+                </a>
+                <span class="wm_toolbar_count">
+                    <t t-out="task_count"/> tâche<t t-if="task_count != 1">s</t>
+                </span>
+            </div>
+
+            <form class="wm_toolbar_search" method="get" action="/my/tasks" role="search">
+                <input type="hidden" name="view" t-att-value="current_view"/>
+                <input type="hidden" name="filterby" t-att-value="filterby"/>
+                <input type="hidden" name="search_in" value="name"/>
+                <label class="wm_search_field">
+                    <i class="oi oi-search" aria-hidden="true"/>
+                    <input type="text" name="search" t-att-value="search or ''"
+                           placeholder="Rechercher une tâche…" aria-label="Rechercher une tâche"/>
+                </label>
+            </form>
+
+            <div class="wm_toolbar_right">
+                <div t-if="searchbar_filters" class="dropdown wm_filter">
+                    <button class="btn wm_btn_filter dropdown-toggle" data-bs-toggle="dropdown"
+                            type="button" aria-expanded="false">
+                        <i class="oi oi-filter me-1" aria-hidden="true"/>
+                        <t t-out="searchbar_filters.get(filterby, searchbar_filters.get('all')).get('label', 'Tout')"/>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <t t-foreach="searchbar_filters" t-as="option">
+                            <a t-att-href="'/my/tasks?' + keep_query('*', filterby=option)"
+                               t-attf-class="dropdown-item#{' active' if filterby == option else ''}">
+                                <t t-out="searchbar_filters[option].get('label')"/>
+                            </a>
+                        </t>
+                    </div>
+                </div>
+
+                <div class="wm_view_switch" role="group" aria-label="Choix de la vue">
+                    <a t-att-href="'/my/tasks?' + keep_query('*', view='kanban')"
+                       t-attf-class="wm_view_btn#{' active' if current_view == 'kanban' else ''}"
+                       title="Vue kanban" t-att-aria-current="'true' if current_view == 'kanban' else None">
+                        <i class="oi oi-view-kanban" aria-hidden="true"/>
+                        <span>Kanban</span>
+                    </a>
+                    <a t-att-href="'/my/tasks?' + keep_query('*', view='list')"
+                       t-attf-class="wm_view_btn#{' active' if current_view == 'list' else ''}"
+                       title="Vue liste" t-att-aria-current="'true' if current_view == 'list' else None">
+                        <i class="oi oi-view-list" aria-hidden="true"/>
+                        <span>Liste</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- ====================================================================
+         Tableau kanban. `breadcrumbs_searchbar` reste à True : ça n'affiche
+         pas la barre standard, ça empêche `portal.portal_layout` de rendre
+         son propre bloc de fil d'Ariane. La navigation est désormais dans
+         l'en-tête noir.
+         ==================================================================== -->
+    <template id="portal_my_tasks_kanban" name="Mes tâches (kanban)">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+            <t t-set="pageName" t-value="'wm_tasks_kanban'"/>
+
+            <t t-call="wm_project_task_portal.portal_tasks_toolbar">
+                <t t-set="current_view" t-value="'kanban'"/>
+            </t>
+
+            <p t-if="truncated" class="text-muted small mb-3">
+                Affichage limité aux <t t-out="kanban_limit"/> premières tâches,
+                affinez la recherche pour voir le reste.
+            </p>
+
+            <t t-if="not columns">
+                <div class="alert alert-warning" role="alert">Aucune tâche.</div>
+            </t>
+
+            <!-- Le tableau est enveloppé pour porter les flèches de défilement
+                 et les fondus de bord : le conteneur qui défile ne peut pas les
+                 porter lui-même, elles défileraient avec son contenu. -->
+            <div t-else="" class="wm_kanban_wrap">
+                <button type="button" class="wm_kanban_nav wm_kanban_nav_prev"
+                        aria-label="Faire défiler vers la gauche">
+                    <i class="fa fa-chevron-left" aria-hidden="true"/>
+                </button>
+                <button type="button" class="wm_kanban_nav wm_kanban_nav_next"
+                        aria-label="Faire défiler vers la droite">
+                    <i class="fa fa-chevron-right" aria-hidden="true"/>
+                </button>
+                <div class="wm_kanban" t-att-data-can-drag="'1' if can_drag else '0'">
+                <div class="wm_kanban_board">
+                    <t t-foreach="columns" t-as="column">
+                        <!-- L'état replié initial reprend celui de l'étape dans Odoo
+                             (champ `fold`). Un choix manuel prend ensuite le dessus,
+                             mémorisé dans le navigateur. -->
+                        <section t-attf-class="wm_kanban_column#{' wm_kanban_folded' if column['stage'].fold else ''}"
+                                 t-att-data-stage-id="column['stage'].id or 0">
+                            <header class="wm_kanban_column_header">
+                                <button type="button" class="wm_kanban_fold"
+                                        t-attf-title="Replier ou déplier « #{column['stage'].name or 'Sans étape'} »"
+                                        t-attf-aria-label="Replier ou déplier « #{column['stage'].name or 'Sans étape'} »">
+                                    <i class="fa fa-chevron-left" aria-hidden="true"/>
+                                </button>
+                                <span class="wm_kanban_column_title"
+                                      t-out="column['stage'].name or 'Sans étape'"/>
+                                <span class="wm_kanban_column_count"
+                                      t-out="len(column['tasks'])"/>
+                            </header>
+                            <div class="wm_kanban_cards">
+                                <t t-foreach="column['tasks']" t-as="task">
+                                    <article class="wm_kanban_card"
+                                             t-att-data-task-id="task.id"
+                                             t-att-draggable="'true' if can_drag else 'false'">
+                                        <a t-attf-href="/my/tasks/#{task.id}" class="wm_kanban_card_link">
+                                            <div class="wm_kanban_card_title" t-out="task.name"/>
+                                            <div class="wm_kanban_card_meta text-muted">
+                                                <span class="wm_kanban_card_project"
+                                                      t-out="task.project_id.name"/>
+                                                <!-- La liste et la fiche affichent déjà #id ;
+                                                     la carte le montre à son tour pour qu'on
+                                                     puisse citer une tâche par son numéro. -->
+                                                <span class="wm_kanban_card_ref">#<t t-out="task.id"/></span>
+                                            </div>
+
+                                            <div t-if="task.tag_ids" class="wm_kanban_card_tags">
+                                                <t t-foreach="task.tag_ids" t-as="tag">
+                                                    <span t-attf-class="badge rounded-pill o_tag o_badge_color_#{tag.color}"
+                                                          t-out="tag.name"/>
+                                                </t>
+                                            </div>
+
+                                            <footer class="wm_kanban_card_footer">
+                                                <span class="wm_kanban_card_priority">
+                                                    <t t-call="project.portal_my_tasks_priority_widget_template"/>
+                                                </span>
+                                                <span t-if="task.task_type"
+                                                      t-attf-class="wm_kanban_type wm_kanban_type_#{task.task_type}"
+                                                      t-out="dict(task._fields['task_type']._description_selection(request.env))[task.task_type]"/>
+                                                <span t-if="task.date_deadline" class="wm_kanban_card_deadline text-muted"
+                                                      t-out="task.date_deadline" t-options='{"widget": "date"}'/>
+                                                <span class="ms-auto">
+                                                    <t t-call="project.portal_my_tasks_state_widget_template"/>
+                                                </span>
+                                            </footer>
+                                        </a>
+                                    </article>
+                                </t>
+                            </div>
+                        </section>
+                    </t>
+                </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- La vue liste reçoit la MÊME barre, à la place de la barre standard du
+         portail : une seule ligne d'outils, identique d'une vue à l'autre.
+         Restreint à /my/tasks — la même liste sert aux sous-tâches d'un projet,
+         où ces boutons n'auraient pas de sens. -->
+    <template id="portal_my_tasks_toolbar" inherit_id="project.portal_my_tasks">
+        <xpath expr="//t[@t-call='portal.portal_searchbar']" position="replace">
+            <t t-if="page_name == 'task'"
+               t-call="wm_project_task_portal.portal_tasks_toolbar">
+                <t t-set="current_view" t-value="'list'"/>
+            </t>
+            <t t-else="" t-call="portal.portal_searchbar">
+                <t t-set="title">Tasks</t>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

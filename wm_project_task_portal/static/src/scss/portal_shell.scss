@@ -1,0 +1,320 @@
+// Coque du portail : bandeau, barre d'outils, formulaire.
+// Les jetons ($wm-primary, $wm-border, $wm-radius-pill…) viennent de
+// wm_brand.scss, compilé juste avant dans le bundle.
+
+// Couleur demandée pour la bascule Kanban / Liste.
+// (Le site déclare #f0544f ; la valeur retenue ici est celle que tu as donnée.)
+$wm-toggle: #EF544F;
+
+// ===========================================================================
+// Bandeau principal
+// ===========================================================================
+#wrapwrap > header {
+
+    .navbar {
+        background-color: $wm-primary !important;
+        border-bottom: 0;
+        padding-top: 0.55rem;
+        padding-bottom: 0.55rem;
+    }
+
+    // Logo servi tel quel, sans retouche (inversion retirée à la demande).
+    .navbar-brand img {
+        max-height: 32px;
+        width: auto;
+    }
+
+    .navbar-brand,
+    .nav-link,
+    .navbar-text,
+    .dropdown-toggle {
+        color: #fff !important;
+    }
+
+    .nav-link:hover,
+    .nav-link:focus,
+    .dropdown-toggle:hover,
+    .dropdown-toggle:focus {
+        color: $wm-toggle !important;
+    }
+
+    .wm_header_nav .nav-link {
+        font-weight: 500;
+        padding-left: 0.9rem;
+        padding-right: 0.9rem;
+    }
+
+    .dropdown-menu {
+        border-radius: $wm-radius-sm;
+        border-color: rgba(255, 255, 255, 0.15);
+    }
+}
+
+// ===========================================================================
+// Barre d'outils — une seule ligne
+// ===========================================================================
+.wm_toolbar {
+    // Trois colonnes : la recherche est centrée sur la PAGE, pas entre ses
+    // deux voisines. Avec un simple flex, elle se décalerait dès que le
+    // nombre de filtres change.
+    display: grid;
+    grid-template-columns: 1fr minmax(14rem, 30rem) 1fr;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+
+    .wm_toolbar_left {
+        justify-self: start;
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+        min-width: 0;
+    }
+
+    .wm_toolbar_search {
+        justify-self: center;
+        width: 100%;
+        margin: 0;
+    }
+
+    .wm_toolbar_right {
+        justify-self: end;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+    }
+}
+
+.wm_toolbar_count {
+    color: #6c757d;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.wm_search_field {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    width: 100%;
+    margin: 0;
+    padding: 0.42rem 1rem;
+    background-color: #fff;
+    border: 1px solid $wm-border;
+    border-radius: $wm-radius-pill;
+    transition: border-color 120ms ease;
+
+    i { color: #9ca3af; }
+
+    input {
+        flex: 1 1 auto;
+        min-width: 0;
+        border: 0;
+        outline: 0;
+        background: transparent;
+        font-size: 0.95rem;
+    }
+
+    &:focus-within {
+        border-color: $wm-primary;
+    }
+}
+
+// Bouton d'action principal
+.wm_btn_new {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.45rem 1.15rem;
+    background-color: $wm-primary;
+    border: 1px solid $wm-primary;
+    border-radius: $wm-radius-pill;
+    color: #fff;
+    font-weight: 500;
+    white-space: nowrap;
+
+    i { font-size: 1rem; }
+
+    &:hover, &:focus {
+        background-color: $wm-toggle;
+        border-color: $wm-toggle;
+        color: #fff;
+    }
+}
+
+.wm_btn_ghost {
+    border: 1px solid $wm-border;
+    border-radius: $wm-radius-pill;
+    padding: 0.4rem 1.1rem;
+    color: $wm-primary;
+
+    &:hover { border-color: $wm-primary; color: $wm-primary; }
+}
+
+.wm_btn_filter {
+    border: 1px solid $wm-border;
+    border-radius: $wm-radius-pill;
+    padding: 0.42rem 1rem;
+    background-color: #fff;
+    color: $wm-primary;
+    font-weight: 500;
+    white-space: nowrap;
+
+    &:hover, &:focus { border-color: $wm-primary; }
+}
+
+// ===========================================================================
+// Bascule Kanban / Liste
+// ===========================================================================
+.wm_view_switch {
+    display: inline-flex;
+    border: 1px solid $wm-toggle;
+    border-radius: $wm-radius-pill;
+    overflow: hidden;
+
+    .wm_view_btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.42rem 1.05rem;
+        color: $wm-toggle;
+        font-weight: 500;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: background-color 120ms ease, color 120ms ease;
+
+        // Icônes natives d'Odoo, nettement plus lisibles que les FontAwesome
+        // à cette taille.
+        i {
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+
+        &:hover { background-color: rgba(239, 84, 79, 0.12); color: $wm-toggle; }
+        &.active { background-color: $wm-toggle; color: #fff; }
+    }
+}
+
+// ===========================================================================
+// Formulaire de création
+// ===========================================================================
+.wm_form_head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.wm_form {
+    max-width: 46rem;
+
+    .wm_field {
+        margin-bottom: 1.1rem;
+
+        label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 0.35rem;
+        }
+
+        input[type="text"],
+        select,
+        textarea,
+        input[type="file"] {
+            width: 100%;
+            padding: 0.55rem 0.9rem;
+            border: 1px solid $wm-border;
+            border-radius: $wm-radius-sm;
+            background-color: #fff;
+            font-family: inherit;
+            font-size: 0.95rem;
+
+            &:focus {
+                outline: 0;
+                border-color: $wm-primary;
+            }
+        }
+
+        textarea { resize: vertical; }
+    }
+
+    .wm_field_pair {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .wm_form_actions {
+        margin-top: 1.5rem;
+    }
+}
+
+// ===========================================================================
+// Écrans étroits : la ligne unique se replie proprement
+// ===========================================================================
+@media (max-width: 991.98px) {
+    .wm_toolbar {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+
+        .wm_toolbar_left,
+        .wm_toolbar_right,
+        .wm_toolbar_search {
+            justify-self: stretch;
+        }
+        .wm_toolbar_right { justify-content: flex-end; }
+    }
+
+    .wm_form .wm_field_pair { grid-template-columns: 1fr; }
+}
+
+// ===========================================================================
+// Pied de page
+// ===========================================================================
+#wrapwrap > footer.o_footer {
+    background-color: $wm-primary !important;
+    color: #fff;
+    border-top: 0;
+
+    .o_footer_copyright,
+    .o_footer_copyright_name { color: #fff; }
+
+    // Bootstrap pose `text-muted` sur la colonne de gauche : gris sur noir,
+    // illisible. On le rattrape sans toucher au reste du portail.
+    .text-muted { color: rgba(255, 255, 255, 0.72) !important; }
+
+    a {
+        color: #fff;
+        text-decoration: none;
+        &:hover, &:focus { color: $wm-toggle; }
+    }
+
+    // Sélecteur de langue, aux couleurs de la bascule Kanban / Liste.
+    // Le bouton d'Odoo porte `border-0` : il faut donc forcer la bordure.
+    .js_language_selector .dropdown-toggle {
+        border: 1px solid $wm-toggle !important;
+        border-radius: $wm-radius-pill;
+        background-color: transparent;
+        color: $wm-toggle;
+        font-weight: 500;
+
+        &:hover, &:focus, &.show {
+            background-color: $wm-toggle;
+            color: #fff;
+        }
+    }
+
+    .js_language_selector .dropdown-menu {
+        border-radius: $wm-radius-sm;
+    }
+}
+
+.wm_footer_contact {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.9rem;
+
+    .wm_footer_sep { opacity: 0.45; }
+}

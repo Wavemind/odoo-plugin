@@ -1,0 +1,127 @@
+// Identité Wavemind — jetons partagés par le portail et l'espace de partage.
+//
+// Les valeurs sont relevées sur https://wavemind.ch (feuille Next.js
+// `_next/static/css`), pas inventées :
+//   --colors-primary   #0c0c0c
+//   --colors-secondary #f0544f
+//   --radii-md         1.25rem
+//   police             PP Neue Montreal, graisses 400 / 500 / 600
+//
+// Ce fichier est placé EN TÊTE des deux bundles : Odoo compile les feuilles
+// d'un bundle d'un seul tenant, donc les variables ci-dessous sont visibles
+// par les fichiers qui suivent.
+
+// --- Polices --------------------------------------------------------------
+// Fichiers embarqués dans le module plutôt que chargés depuis wavemind.ch :
+// aucun appel vers un tiers depuis le navigateur du client, et le portail
+// reste correct même si le site est indisponible. Convertis en WOFF2
+// (168 Ko au total, contre 359 Ko en OTF d'origine).
+
+@font-face {
+    font-family: "PP Neue Montreal";
+    src: url("/wm_project_task_portal/static/src/fonts/pp-neue-montreal-400.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: "PP Neue Montreal";
+    src: url("/wm_project_task_portal/static/src/fonts/pp-neue-montreal-500.woff2") format("woff2");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: "PP Neue Montreal";
+    src: url("/wm_project_task_portal/static/src/fonts/pp-neue-montreal-600.woff2") format("woff2");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+// La pile de repli reprend celle du site : Arial d'abord, dont les métriques
+// sont proches, pour limiter le saut visuel pendant le chargement.
+$wm-font: "PP Neue Montreal", Arial, "Helvetica Neue", Helvetica, sans-serif;
+
+// --- Couleurs -------------------------------------------------------------
+$wm-primary: #0c0c0c;
+$wm-secondary: #f0544f;
+$wm-gray: #9ca3af;
+$wm-white: #fff;
+$wm-border: #e5e7eb;
+$wm-surface: #f7f7f7;
+$wm-body: #0c0c0c;
+
+// --- Rayons ---------------------------------------------------------------
+// Le site pose 1.25rem sur ses grands blocs. Appliqué tel quel à une carte de
+// tâche, le résultat est trop rond : on garde 1.25rem pour les conteneurs
+// (colonnes) et une valeur réduite pour les cartes. Deux variables, faciles à
+// régler si le rendu ne convient pas.
+$wm-radius: 1.25rem;
+$wm-radius-sm: 0.75rem;
+$wm-radius-pill: 9999px;
+
+// --- Application ----------------------------------------------------------
+// Ce fichier n'est servi que par le portail (web.assets_frontend) et par la
+// page de partage (project.webclient) : `body` ne peut donc pas déborder sur
+// le back-office.
+body {
+    --font-sans-serif: #{$wm-font};
+    --body-font-family: #{$wm-font};
+    --headings-font-family: #{$wm-font};
+    --primary: #{$wm-primary};
+    --secondary: #{$wm-secondary};
+    --border-radius: #{$wm-radius-sm};
+
+    font-family: $wm-font;
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: $wm-font;
+    font-weight: 600;
+}
+
+.btn {
+    font-family: $wm-font;
+    font-weight: 500;
+    border-radius: $wm-radius-pill;
+}
+
+.btn-primary {
+    background-color: $wm-primary;
+    border-color: $wm-primary;
+    color: $wm-white;
+
+    &:hover, &:focus, &:active {
+        background-color: $wm-secondary;
+        border-color: $wm-secondary;
+        color: $wm-white;
+    }
+}
+
+.badge {
+    font-family: $wm-font;
+    font-weight: 500;
+}
+
+// Odoo compile SON secondaire dans ses propres variables SCSS, à partir des
+// paramètres généraux (module muk_web_colors, pièce jointe
+// /_custom/web._assets_primary_variables/...). Une surcharge de variable CSS
+// n'y peut rien : la valeur est figée avant Bootstrap.
+//
+// Sur le portail, elle n'affleure qu'ici — un bouton sur /my/home — donc on la
+// reprend au cas par cas. Pour l'aligner partout, back-office compris, c'est
+// dans Configuration > Paramètres généraux qu'il faut poser #f0544f : le
+// module régénère alors la feuille au bon format.
+.btn-secondary {
+    background-color: $wm-secondary;
+    border-color: $wm-secondary;
+    color: $wm-white;
+
+    &:hover, &:focus, &:active {
+        background-color: darken($wm-secondary, 8%);
+        border-color: darken($wm-secondary, 8%);
+        color: $wm-white;
+    }
+}

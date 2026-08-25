@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Fiche de tâche côté portail : afficher le type.
+         `portal_my_task_second_column` est une colonne laissée vide par Odoo
+         comme point d'extension : on s'en sert plutôt que de bousculer la
+         mise en page existante. -->
+    <template id="portal_my_task_task_type" inherit_id="project.portal_my_task">
+        <xpath expr="//div[@name='portal_my_task_second_column']" position="inside">
+            <div t-if="task.task_type">
+                <strong>Type :</strong>
+                <span t-field="task.task_type"/>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- En-tête de groupe quand le client groupe par type. Sans cette branche,
+         le regroupement fonctionne mais les en-têtes sortent vides. -->
+    <template id="portal_tasks_list_groupby_task_type" inherit_id="project.portal_tasks_list">
+        <xpath expr="//t[@t-if=&quot;groupby == 'priority'&quot;]" position="after">
+            <t t-if="groupby == 'task_type'">
+                <span class="text-truncate" t-field="tasks[0].sudo().task_type"/>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>
