@@ -5,7 +5,7 @@
          et reste donc calé à droite avec le menu du compte. -->
     <template id="portal_header_nav" inherit_id="portal.frontend_layout">
         <xpath expr="//ul[@id='top_menu']" position="before">
-            <ul class="nav navbar-nav wm_header_nav">
+            <ul t-if="not wm_public_page" class="nav navbar-nav wm_header_nav">
                 <li class="nav-item">
                     <a class="nav-link" href="/my/home">Accueil</a>
                 </li>

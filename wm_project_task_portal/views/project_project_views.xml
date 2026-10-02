@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Formulaire public de ticket : activation et lien à copier, dans
+         l'onglet Paramètres du projet. Réservé aux responsables de projet. -->
+    <record id="edit_project_public_ticket" model="ir.ui.view">
+        <field name="name">project.project.form.wm.public.ticket</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <group name="extra_settings" position="inside">
+                <field name="wm_public_ticket_token" invisible="1"
+                       groups="project.group_project_manager"/>
+                <field name="wm_public_ticket_url" widget="CopyClipboardChar"
+                       invisible="not wm_public_ticket_token"
+                       groups="project.group_project_manager"/>
+                <div colspan="2" groups="project.group_project_manager">
+                    <button name="action_wm_public_ticket_enable" type="object"
+                            string="Activer le formulaire public de ticket"
+                            class="btn-secondary"
+                            invisible="wm_public_ticket_token"/>
+                    <button name="action_wm_public_ticket_enable" type="object"
+                            string="Régénérer le lien"
+                            class="btn-link"
+                            confirm="L'ancien lien cessera de fonctionner. Continuer ?"
+                            invisible="not wm_public_ticket_token"/>
+                    <button name="action_wm_public_ticket_disable" type="object"
+                            string="Désactiver le formulaire"
+                            class="btn-link text-danger"
+                            confirm="Le lien cessera de fonctionner. Continuer ?"
+                            invisible="not wm_public_ticket_token"/>
+                </div>
+            </group>
+        </field>
+    </record>
+
+</odoo>

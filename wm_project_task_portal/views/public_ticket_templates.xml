@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Formulaire public de dépôt de ticket (/ticket/<jeton>). Sans connexion :
+         le projet est déduit du jeton côté serveur, jamais d'un champ du
+         formulaire. -->
+    <template id="public_ticket_form" name="Ticket public : formulaire">
+        <t t-call="web.frontend_layout">
+            <t t-set="wm_public_page" t-value="True"/>
+            <div id="wrap">
+                <div class="container py-4 wm_public_ticket">
+                    <div class="wm_form_head">
+                        <h3 class="mb-0">
+                            Nouveau ticket — <t t-out="project_name"/>
+                        </h3>
+                    </div>
+
+                    <div t-if="error" class="alert alert-danger" role="alert" t-out="error"/>
+
+                    <form method="post" t-attf-action="/ticket/#{token}"
+                          enctype="multipart/form-data" class="wm_form">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                        <!-- Piège à robots : invisible pour une personne, rempli
+                             par un script qui complète tous les champs. -->
+                        <div style="position:absolute; left:-9999px;" aria-hidden="true">
+                            <label for="company_website">Ne pas remplir</label>
+                            <input type="text" name="company_website" id="company_website"
+                                   tabindex="-1" autocomplete="off"/>
+                        </div>
+
+                        <div class="wm_field wm_field_pair">
+                            <div>
+                                <label for="contact_name">Votre nom</label>
+                                <input type="text" name="contact_name" id="contact_name"
+                                       required="required" maxlength="100"
+                                       t-att-value="data.get('contact_name') or ''"/>
+                            </div>
+                            <div>
+                                <label for="contact_email">Votre e-mail</label>
+                                <input type="email" name="contact_email" id="contact_email"
+                                       required="required" maxlength="200"
+                                       t-att-value="data.get('contact_email') or ''"/>
+                            </div>
+                        </div>
+
+                        <div class="wm_field">
+                            <label for="name">Titre</label>
+                            <input type="text" name="name" id="name" required="required"
+                                   maxlength="200" t-att-value="data.get('name') or ''"
+                                   placeholder="Ex. : le bouton d'export ne répond plus"/>
+                        </div>
+
+                        <div class="wm_field wm_field_pair">
+                            <div>
+                                <label for="task_type">Type</label>
+                                <select name="task_type" id="task_type">
+                                    <t t-foreach="task_types" t-as="option">
+                                        <option t-att-value="option[0]"
+                                                t-att-selected="'selected' if option[0] == (data.get('task_type') or 'bug') else None"
+                                                t-out="option[1]"/>
+                                    </t>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="priority">Priorité</label>
+                                <select name="priority" id="priority">
+                                    <t t-foreach="priorities" t-as="option">
+                                        <option t-att-value="option[0]"
+                                                t-att-selected="'selected' if option[0] == (data.get('priority') or '1') else None"
+                                                t-out="option[1]"/>
+                                    </t>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="wm_field">
+                            <label for="description">Description</label>
+                            <textarea name="description" id="description" rows="7"
+                                      placeholder="Ce que vous attendiez, comment reproduire le problème, sur quel appareil…"
+                                      t-out="data.get('description') or ''"/>
+                        </div>
+
+                        <div class="wm_field">
+                            <label for="attachments">Pièces jointes (captures d'écran, etc.)</label>
+                            <input type="file" name="attachments" id="attachments" multiple="multiple"/>
+                        </div>
+
+                        <div class="wm_form_actions">
+                            <button type="submit" class="btn wm_btn_new">
+                                <span>Envoyer le ticket</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="public_ticket_done" name="Ticket public : confirmation">
+        <t t-call="web.frontend_layout">
+            <t t-set="wm_public_page" t-value="True"/>
+            <div id="wrap">
+                <div class="container py-4 wm_public_ticket">
+                    <div class="wm_form_head">
+                        <h3 class="mb-0">Ticket enregistré</h3>
+                    </div>
+                    <div class="alert alert-success" role="alert">
+                        Merci, votre ticket a bien été transmis à Wavemind
+                        <t t-if="reference"> (référence <strong>#<t t-out="reference"/></strong>)</t>.
+                    </div>
+                    <a t-attf-href="/ticket/#{token}" class="btn wm_btn_new">
+                        <span>Déposer un autre ticket</span>
+                    </a>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

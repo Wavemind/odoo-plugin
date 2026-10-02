@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'WM Project Task Portal',
-    'version': '19.0.1.0.0',
+    'version': '19.0.1.1.0',
     'summary': "Couche portail Wavemind : type de tâche, filtre « en cours », groupement",
     'description': """
 Couche mince au-dessus du portail standard d'Odoo 19.
@@ -19,6 +19,9 @@ commente et dépose des documents. Ce module ne comble que les écarts réels :
   * Le type de tâche est ajouté aux vues de partage (formulaire et liste), à la
     fiche portail et aux groupements disponibles.
 
+  * Formulaire public de ticket : une URL à jeton par projet (/ticket/<jeton>),
+    sans connexion, activable depuis l'onglet Paramètres du projet.
+
 Aucun contrôleur n'est réécrit, aucun gabarit n'est remplacé : uniquement des
 héritages. C'est délibéré — la couche portail de la v17 avait été perdue à la
 migration parce qu'elle redéfinissait tout.
@@ -33,6 +36,8 @@ migration parce qu'elle redéfinissait tout.
         'views/project_sharing_portal.xml',
         'views/portal_kanban_templates.xml',
         'views/portal_shell_templates.xml',
+        'views/public_ticket_templates.xml',
+        'views/project_project_views.xml',
     ],
     'assets': {
         # wm_brand.scss vient EN PREMIER dans chaque bundle : il porte les
