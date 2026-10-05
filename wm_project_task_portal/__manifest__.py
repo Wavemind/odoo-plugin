@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'WM Project Task Portal',
-    'version': '19.0.1.1.0',
+    'version': '19.0.1.1.1',
     'summary': "Couche portail Wavemind : type de tâche, filtre « en cours », groupement",
     'description': """
 Couche mince au-dessus du portail standard d'Odoo 19.

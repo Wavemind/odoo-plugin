@@ -8,6 +8,8 @@ from odoo.http import request
 from odoo.tools import email_normalize
 from odoo.tools.mail import plaintext2html
 
+from ..models.project_project import TICKET_SLUG_RE
+
 # Formulaire ouvert sans connexion : on borne ce qu'un envoi peut déposer.
 MAX_ATTACHMENTS = 10
 MAX_ATTACHMENT_SIZE = 25 * 1024 * 1024
@@ -23,7 +25,7 @@ class WmPublicTicket(http.Controller):
 
     def _wm_project_from_token(self, token):
         # Un jeton vide ne doit jamais correspondre à un projet sans jeton.
-        if not token or len(token) < 16:
+        if not token or not TICKET_SLUG_RE.match(token):
             raise request.not_found()
         project = request.env['project.project'].sudo().search([
             ('wm_public_ticket_token', '=', token),

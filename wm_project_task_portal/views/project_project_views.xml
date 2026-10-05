@@ -9,7 +9,8 @@
         <field name="inherit_id" ref="project.edit_project"/>
         <field name="arch" type="xml">
             <group name="extra_settings" position="inside">
-                <field name="wm_public_ticket_token" invisible="1"
+                <field name="wm_public_ticket_token"
+                       invisible="not wm_public_ticket_token"
                        groups="project.group_project_manager"/>
                 <field name="wm_public_ticket_url" widget="CopyClipboardChar"
                        invisible="not wm_public_ticket_token"
